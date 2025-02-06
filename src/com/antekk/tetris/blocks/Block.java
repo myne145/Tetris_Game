@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class Block extends Rectangle {
 
-    protected Block(int blockPosX, int blockPosY) {
+    public Block(int blockPosX, int blockPosY) {
         super(blockPosX * getSizePx(), blockPosY * getSizePx(), getSizePx(), getSizePx());
     }
 

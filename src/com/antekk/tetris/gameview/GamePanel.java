@@ -2,27 +2,38 @@ package com.antekk.tetris.gameview;
 
 import com.antekk.tetris.blocks.Block;
 import com.antekk.tetris.blocks.Shape;
-import com.antekk.tetris.blocks.TestShape;
+import com.antekk.tetris.blocks.shapes.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class GamePanel extends JPanel {
+public class GamePanel extends JPanel implements KeyListener {
     private final int RIGHT = getBoardCols() * Block.getSizePx();
     private final int BOTTOM = getBoardRows() * Block.getSizePx();
-    private final ArrayList<Shape> stationaryShapes = new ArrayList<>();
+    private Shape currentShape;
 
-
-    TestShape testShape = new TestShape();
+    private void setRandomizedCurrentShape() {
+        int rand = (int) (Math.random() * 8);
+        switch(rand) {
+            case 1 -> currentShape = new TShape();
+            case 2 -> currentShape = new ZShape();
+            case 3 -> currentShape = new JShape();
+            case 4 -> currentShape = new LineShape();
+            case 5 -> currentShape = new LShape();
+            case 6 -> currentShape = new SquareShape();
+            case 7 -> currentShape = new SShape();
+        }
+    }
 
     private void gameLoop() {
 
 
         //if the shape is already in the bottom
-        if(!testShape.moveDown()) {
-            stationaryShapes.add(testShape);
-            testShape = new TestShape();
+        if(!currentShape.moveDown()) {
+            Shape.getStationaryShapes().add(currentShape);
+            setRandomizedCurrentShape();
         }
 
         repaint();
@@ -39,6 +50,11 @@ public class GamePanel extends JPanel {
     }
 
     protected GamePanel() {
+        this.setFocusable(true);
+        this.requestFocus();
+        this.addKeyListener(this);
+
+        setRandomizedCurrentShape();
         Thread gameThread = getGameThread();
         gameThread.start();
     }
@@ -47,13 +63,15 @@ public class GamePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        testShape.draw(g);
-        for(Shape shape : stationaryShapes) {
-            shape.draw(g);
-        }
-
+        //Bottom
         g.setColor(Color.CYAN);
         g.fillRect(0, BOTTOM, RIGHT, 20);
+
+        //Shapes
+        currentShape.draw(g);
+        for(Shape shape : Shape.getStationaryShapes()) {
+            shape.draw(g);
+        }
     }
 
     @Override
@@ -67,5 +85,29 @@ public class GamePanel extends JPanel {
 
     public static int getBoardCols() {
         return 10;
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_RIGHT -> currentShape.moveRight();
+            case KeyEvent.VK_LEFT -> currentShape.moveLeft();
+            case KeyEvent.VK_DOWN -> currentShape.moveDown();
+            case KeyEvent.VK_SPACE -> currentShape.hardDrop();
+            default -> {
+                return;
+            }
+        }
+        repaint();
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
     }
 }

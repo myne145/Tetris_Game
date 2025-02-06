@@ -12,6 +12,7 @@ public class GameWindow extends JFrame {
 
         Dimension prefferedSize = panel.getPreferredSize();
         prefferedSize.height += 100;
+        prefferedSize.width += 20;
         this.setPreferredSize(prefferedSize);
 
         this.pack();

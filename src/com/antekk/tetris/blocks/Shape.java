@@ -6,54 +6,75 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public interface Shape {
-    Color getColor();
-    ArrayList<ArrayList<Block>> getBlocks();
+    ArrayList<Shape> stationaryShapes = new ArrayList<>();
 
+    Color getColor();
+    ArrayList<Point> getCollisionPoints();
+    int rotation = 0;
     void rotateLeft();
     void rotateRight();
-    void hardDrop();
 
-    default void draw(Graphics g) {
-        g.setColor(this.getColor());
-        for(ArrayList<Block> line : this.getBlocks()) {
-            for(Block block : line) {
-                g.fillRect(block.x, block.y, Block.getSizePx(), Block.getSizePx());
-            }
-        }
+    default void hardDrop() {
+
+
     }
 
-    default Block getBottomBlock() {
-        ArrayList<Block> lastLine = getBlocks().getLast();
-        return lastLine.getFirst();
+    default void draw(Graphics g) {
+        for(int i = 0; i < getCollisionPoints().size(); i++) {
+            for(int j = 0; j < getCollisionPoints().size(); j++) {
+
+            }
+        }
+
+
+        for(Point p : getCollisionPoints()) {
+            //Fill
+            g.setColor(this.getColor());
+            g.fillRect(p.x * Block.getSizePx(), p.y * Block.getSizePx(), Block.getSizePx(), Block.getSizePx());
+
+            //Border
+            g.setColor(Color.BLACK);
+            g.drawRect(p.x * Block.getSizePx(), p.y * Block.getSizePx(), Block.getSizePx(), Block.getSizePx());
+        }
     }
 
     default boolean moveDown() {
-        if(getBottomBlock().y == (GamePanel.getBoardRows() - 1) * Block.getSizePx()) {
-            return false;
-        }
-
-        for(ArrayList<Block> line : getBlocks()) {
-            for(Block block : line) {
-                block.y += Block.getSizePx();
+        for(Point p : getCollisionPoints()) {
+            if(p.y == GamePanel.getBoardRows() - 1) {
+                return false;
             }
+        }
+        for(Shape shape : getStationaryShapes()) {
+            for(Point checkedShapesCollisionPoint : shape.getCollisionPoints()) {
+                for (Point p : getCollisionPoints()) {
+                    if (p.y + 1 == checkedShapesCollisionPoint.y && p.x == checkedShapesCollisionPoint.x) {
+                        return false;
+                    }
+                }
+            }
+        }
+//        if(getBottomBlock().y == (GamePanel.getBoardRows() - 1) * Block.getSizePx()) {
+//            return false;
+//        }
+
+        for(Point p : getCollisionPoints()) {
+            p.translate(0, 1);
         }
         return true;
     }
 
     /**
      *
-     * @param dir -1 is left, 1 is right
+     * @param direction -1 is left, 1 is right
      * @return
      */
-    private boolean moveHorizontaly(int dir) {
+    private boolean moveHorizontaly(int direction) {
 //        if(getBottomBlock().x == (GamePanel.getBoardRows() - 1) * Block.getSizePx()) {
 //            return false;
 //        } //TODO
 
-        for(ArrayList<Block> line : getBlocks()) {
-            for(Block block : line) {
-                block.x += dir * Block.getSizePx();
-            }
+        for(Point p : getCollisionPoints()) {
+            p.translate(direction, 0);
         }
         return true;
     }
@@ -67,6 +88,10 @@ public interface Shape {
     }
 
     static float getSpeedBlocksPerSeconds() {
-        return 4f;
+        return 3f;
+    }
+
+    static ArrayList<Shape> getStationaryShapes() {
+        return stationaryShapes;
     }
 }
