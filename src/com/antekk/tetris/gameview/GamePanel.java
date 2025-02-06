@@ -15,15 +15,15 @@ public class GamePanel extends JPanel implements KeyListener {
     private Shape currentShape;
 
     private void setRandomizedCurrentShape() {
-        int rand = (int) (Math.random() * 8);
+        int rand = (int) (Math.random() * 7);
         switch(rand) {
-            case 1 -> currentShape = new TShape();
-            case 2 -> currentShape = new ZShape();
-            case 3 -> currentShape = new JShape();
-            case 4 -> currentShape = new LShape();
-            case 5 -> currentShape = new LineShape();
-            case 6 -> currentShape = new SquareShape();
-            case 7 -> currentShape = new SShape();
+            case 0 -> currentShape = new TShape();
+            case 1 -> currentShape = new ZShape();
+            case 2 -> currentShape = new JShape();
+            case 3 -> currentShape = new LShape();
+            case 4 -> currentShape = new LineShape();
+            case 5 -> currentShape = new SquareShape();
+            case 6 -> currentShape = new SShape();
         }
     }
 

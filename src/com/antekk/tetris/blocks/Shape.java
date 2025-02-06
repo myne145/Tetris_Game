@@ -20,13 +20,6 @@ public interface Shape {
     }
 
     default void draw(Graphics g) {
-        for(int i = 0; i < getCollisionPoints().size(); i++) {
-            for(int j = 0; j < getCollisionPoints().size(); j++) {
-
-            }
-        }
-
-
         for(Point p : getCollisionPoints()) {
             //Fill
             g.setColor(this.getColor());
@@ -38,24 +31,42 @@ public interface Shape {
         }
     }
 
+    private boolean checkForCollisionsForShapeXAxis(Shape shapeToCompare) {
+        for(Point pointToCheck : shapeToCompare.getCollisionPoints()) {
+            for (Point p : getCollisionPoints()) {
+                if (p.x + 1 == pointToCheck.x && p.y == pointToCheck.y) {
+                    return true;
+                }
+                if (p.x - 1 == pointToCheck.x && p.y == pointToCheck.y) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean checkForCollisionsForShapeYAxis(Shape shapeToCompare) {
+        for(Point pointToCheck : shapeToCompare.getCollisionPoints()) {
+            for (Point p : getCollisionPoints()) {
+                if (p.y + 1 == pointToCheck.y && p.x == pointToCheck.x) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     default boolean moveDown() {
         for(Point p : getCollisionPoints()) {
             if(p.y == GamePanel.getBoardRows() - 1) {
                 return false;
             }
         }
+
         for(Shape shape : getStationaryShapes()) {
-            for(Point checkedShapesCollisionPoint : shape.getCollisionPoints()) {
-                for (Point p : getCollisionPoints()) {
-                    if (p.y + 1 == checkedShapesCollisionPoint.y && p.x == checkedShapesCollisionPoint.x) {
-                        return false;
-                    }
-                }
-            }
+            if(checkForCollisionsForShapeYAxis(shape))
+                return false;
         }
-//        if(getBottomBlock().y == (GamePanel.getBoardRows() - 1) * Block.getSizePx()) {
-//            return false;
-//        }
 
         for(Point p : getCollisionPoints()) {
             p.translate(0, 1);
@@ -69,9 +80,18 @@ public interface Shape {
      * @return
      */
     private boolean moveHorizontaly(int direction) {
-//        if(getBottomBlock().x == (GamePanel.getBoardRows() - 1) * Block.getSizePx()) {
-//            return false;
-//        } //TODO
+        for(Point p : getCollisionPoints()) {
+            if((p.x == GamePanel.getBoardCols() - 1 && direction == 1) ||
+                    (p.x == 0 && direction == -1)) {
+                return false;
+            }
+        }
+
+
+        for(Shape shape : getStationaryShapes()) {
+            if(checkForCollisionsForShapeXAxis(shape))
+                return false;
+        }
 
         for(Point p : getCollisionPoints()) {
             p.translate(direction, 0);
