@@ -11,7 +11,7 @@ public class LShape implements Shape {
             new Point(0,0),
             new Point(0,1),
             new Point(0,2),
-            new Point(1,3)
+            new Point(1,2)
     ));
 
     @Override

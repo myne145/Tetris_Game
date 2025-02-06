@@ -20,8 +20,8 @@ public class GamePanel extends JPanel implements KeyListener {
             case 1 -> currentShape = new TShape();
             case 2 -> currentShape = new ZShape();
             case 3 -> currentShape = new JShape();
-            case 4 -> currentShape = new LineShape();
-            case 5 -> currentShape = new LShape();
+            case 4 -> currentShape = new LShape();
+            case 5 -> currentShape = new LineShape();
             case 6 -> currentShape = new SquareShape();
             case 7 -> currentShape = new SShape();
         }
