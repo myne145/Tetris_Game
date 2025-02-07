@@ -8,28 +8,45 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements KeyListener {
     private final int RIGHT = getBoardCols() * Block.getSizePx();
     private final int BOTTOM = getBoardRows() * Block.getSizePx();
     private Shape currentShape;
+    private final ArrayList<Shape> shapesList = new ArrayList<>();
 
     private void setRandomizedCurrentShape() {
-        int rand = (int) (Math.random() * 7);
-        switch(rand) {
-            case 0 -> currentShape = new TShape();
-            case 1 -> currentShape = new ZShape();
-            case 2 -> currentShape = new JShape();
-            case 3 -> currentShape = new LShape();
-            case 4 -> currentShape = new LineShape();
-            case 5 -> currentShape = new SquareShape();
-            case 6 -> currentShape = new SShape();
+        if(shapesList.isEmpty()) {
+            //filling the array
+            shapesList.add(new TShape());
+            shapesList.add(new ZShape());
+            shapesList.add(new JShape());
+            shapesList.add(new LShape());
+            shapesList.add(new LineShape());
+            shapesList.add(new SquareShape());
+            shapesList.add(new SShape());
+
+            //randomly shifts elements left or right
+            shapesList.sort((o1, o2) -> (int) (Math.random() * 2) - 1);
+
+
+            //if previous and newly generated shapes are the same swap it with some other shape
+            if(currentShape != null && shapesList.getFirst().getClass() == currentShape.getClass()) {
+                int rand = 0;
+                while(rand == 0) {
+                    rand = (int) (Math.random() * 7);
+                }
+                Shape temp = shapesList.getFirst();
+                shapesList.set(0, shapesList.get(rand));
+                shapesList.set(rand, temp);
+            }
         }
+        currentShape = shapesList.getFirst();
+        shapesList.removeFirst();
     }
 
     private void gameLoop() {
-
-
         //if the shape is already in the bottom
         if(!currentShape.moveDown()) {
             Shape.getStationaryShapes().add(currentShape);
@@ -60,7 +77,7 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    protected synchronized void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         //Bottom
