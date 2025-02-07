@@ -8,9 +8,9 @@ import java.util.Arrays;
 
 public class ZShape implements Shape {
     private final ArrayList<Point> collisionPoints = new ArrayList<>(Arrays.asList(
+            new Point(1,1),
             new Point(0,0),
             new Point(1,0),
-            new Point(1,1),
             new Point(2,1)
     ));
 
@@ -22,15 +22,5 @@ public class ZShape implements Shape {
     @Override
     public ArrayList<Point> getCollisionPoints() {
         return collisionPoints;
-    }
-
-    @Override
-    public void rotateLeft() {
-
-    }
-
-    @Override
-    public void rotateRight() {
-
     }
 }

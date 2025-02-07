@@ -25,12 +25,12 @@ public class SquareShape implements Shape {
     }
 
     @Override
-    public void rotateLeft() {
-
+    public boolean rotateLeft() {
+        return false;
     }
 
     @Override
-    public void rotateRight() {
-
+    public boolean rotateRight() {
+        return false;
     }
 }

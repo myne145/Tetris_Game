@@ -9,14 +9,51 @@ public interface Shape {
     ArrayList<Shape> stationaryShapes = new ArrayList<>();
 
     Color getColor();
+
+    /**
+     *
+     * @return list of collision points, first element is a center point
+     */
     ArrayList<Point> getCollisionPoints();
-    int rotation = 0;
-    void rotateLeft();
-    void rotateRight();
+
+    /**
+     *
+     * @param direction 1 is right, -1 is left
+     */
+    private boolean rotate(int direction) {
+        Point center = (Point) getCollisionPoints().get(0).clone();
+        for(Point p : getCollisionPoints()) {
+            int temp = p.y;
+            p.y = p.x;
+            p.x = temp;
+        }
+
+        for(Point p : getCollisionPoints()) {
+            if(direction == 1) p.x = 3 - p.x;
+            else if(direction == -1) p.y = 3 - p.y;
+        }
+
+        int dx = center.x - getCollisionPoints().get(0).x;
+        int dy = center.y - getCollisionPoints().get(0).y;
+
+        for(Point p : getCollisionPoints()) {
+            p.translate(dx, dy);
+        }
+        return true;
+    }
+
+    default boolean rotateLeft() {
+        return rotate(-1);
+    }
+
+    default boolean rotateRight() {
+        return rotate(1);
+    }
+
+
 
     default void hardDrop() {
-
-
+        while(moveDown());
     }
 
     default void draw(Graphics g) {
@@ -108,7 +145,7 @@ public interface Shape {
     }
 
     static float getSpeedBlocksPerSeconds() {
-        return 3f;
+        return 6f;
     }
 
     static ArrayList<Shape> getStationaryShapes() {

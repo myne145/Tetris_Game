@@ -111,6 +111,8 @@ public class GamePanel extends JPanel implements KeyListener {
             case KeyEvent.VK_LEFT -> currentShape.moveLeft();
             case KeyEvent.VK_DOWN -> currentShape.moveDown();
             case KeyEvent.VK_SPACE -> currentShape.hardDrop();
+            case KeyEvent.VK_D -> currentShape.rotateRight();
+            case KeyEvent.VK_A -> currentShape.rotateLeft();
             default -> {
                 return;
             }

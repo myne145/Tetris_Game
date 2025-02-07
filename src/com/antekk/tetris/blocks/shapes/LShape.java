@@ -8,8 +8,8 @@ import java.util.Arrays;
 
 public class LShape implements Shape {
     private final ArrayList<Point> collisionPoints = new ArrayList<>(Arrays.asList(
-            new Point(0,0),
             new Point(0,1),
+            new Point(0,0),
             new Point(0,2),
             new Point(1,2)
     ));
@@ -22,15 +22,5 @@ public class LShape implements Shape {
     @Override
     public ArrayList<Point> getCollisionPoints() {
         return collisionPoints;
-    }
-
-    @Override
-    public void rotateLeft() {
-
-    }
-
-    @Override
-    public void rotateRight() {
-
     }
 }
