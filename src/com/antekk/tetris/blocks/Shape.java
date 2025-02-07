@@ -21,23 +21,34 @@ public interface Shape {
      * @param direction 1 is right, -1 is left
      */
     private boolean rotate(int direction) {
-        Point center = (Point) getCollisionPoints().get(0).clone();
-        for(Point p : getCollisionPoints()) {
+        ArrayList<Point> futureCollisionPoints = (ArrayList<Point>) getCollisionPoints().clone();
+
+        Point center = (Point) futureCollisionPoints.get(0).clone();
+        for(Point p : futureCollisionPoints) {
             int temp = p.y;
             p.y = p.x;
             p.x = temp;
         }
 
-        for(Point p : getCollisionPoints()) {
+        for(Point p : futureCollisionPoints) {
             if(direction == 1) p.x = 3 - p.x;
             else if(direction == -1) p.y = 3 - p.y;
         }
 
-        int dx = center.x - getCollisionPoints().get(0).x;
-        int dy = center.y - getCollisionPoints().get(0).y;
+        int dx = center.x - futureCollisionPoints.get(0).x;
+        int dy = center.y - futureCollisionPoints.get(0).y;
 
-        for(Point p : getCollisionPoints()) {
+        for(Point p : futureCollisionPoints) {
             p.translate(dx, dy);
+        }
+
+        for(Shape shape : getStationaryShapes()) {
+            if(checkForCollisionsForShapeYAxis(shape) || checkForCollisionsForShapeXAxis(shape))
+                return false;
+        }
+
+        for(int i = 0; i < futureCollisionPoints.size(); i++) {
+            this.getCollisionPoints().set(i, futureCollisionPoints.get(i));
         }
         return true;
     }

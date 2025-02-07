@@ -8,10 +8,10 @@ import java.util.Arrays;
 
 public class JShape implements Shape {
     private final ArrayList<Point> collisionPoints = new ArrayList<>(Arrays.asList(
-            new Point(1,1),
-            new Point(1,0),
-            new Point(1,2),
-            new Point(0, 2)
+            new Point(4,1),
+            new Point(3,0),
+            new Point(3,1),
+            new Point(5, 1)
     ));
 
     @Override

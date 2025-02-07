@@ -8,10 +8,10 @@ import java.util.Arrays;
 
 public class ZShape implements Shape {
     private final ArrayList<Point> collisionPoints = new ArrayList<>(Arrays.asList(
-            new Point(1,1),
-            new Point(0,0),
-            new Point(1,0),
-            new Point(2,1)
+            new Point(4,1),
+            new Point(3,0),
+            new Point(4,0),
+            new Point(5,1)
     ));
 
     @Override
