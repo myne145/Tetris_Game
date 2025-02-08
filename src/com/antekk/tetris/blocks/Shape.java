@@ -16,13 +16,53 @@ public interface Shape {
      */
     ArrayList<Point> getCollisionPoints();
 
+    default boolean rotateLeft() {
+        return rotate(-1);
+    }
+
+    default boolean rotateRight() {
+        return rotate(1);
+    }
+
+    default boolean moveLeft() {
+        return moveHorizontaly(-1);
+    }
+
+    default boolean moveRight() {
+        return moveHorizontaly(1);
+    }
+
+    default void hardDrop() {
+        while(moveDown());
+    }
+
+    static float getSpeedBlocksPerSeconds() {
+        return 2f;
+    }
+
+    static ArrayList<Shape> getStationaryShapes() {
+        return stationaryShapes;
+    }
+
+    default void draw(Graphics g) {
+        for(Point p : getCollisionPoints()) {
+            //Fill
+            g.setColor(this.getColor());
+            g.fillRect(GamePanel.LEFT + p.x * Block.getSizePx(), GamePanel.TOP + p.y * Block.getSizePx(), Block.getSizePx(), Block.getSizePx());
+
+            //Border
+            g.setColor(Color.BLACK);
+            g.drawRect(GamePanel.LEFT + p.x * Block.getSizePx(), GamePanel.TOP + p.y * Block.getSizePx(), Block.getSizePx(), Block.getSizePx());
+        }
+    }
     /**
      *
      * @param direction 1 is right, -1 is left
      */
     private boolean rotate(int direction) {
-        ArrayList<Point> futureCollisionPoints = (ArrayList<Point>) getCollisionPoints().clone();
+        ArrayList<Point> futureCollisionPoints = new ArrayList<>(getCollisionPoints());
 
+        //Shape rotation
         Point center = (Point) futureCollisionPoints.get(0).clone();
         for(Point p : futureCollisionPoints) {
             int temp = p.y;
@@ -35,6 +75,7 @@ public interface Shape {
             else if(direction == -1) p.y = 3 - p.y;
         }
 
+        //Restoring original position
         int dx = center.x - futureCollisionPoints.get(0).x;
         int dy = center.y - futureCollisionPoints.get(0).y;
 
@@ -42,41 +83,33 @@ public interface Shape {
             p.translate(dx, dy);
         }
 
+        //Wall kicks
+        int wallKickDistanceX = 0;
+        for(Point p : futureCollisionPoints) {
+            int distAbs = Math.abs(p.x);
+            if(p.x < 0 && distAbs > wallKickDistanceX) {
+                wallKickDistanceX = distAbs;
+            } else if(p.x >= GamePanel.getBoardCols() && -(distAbs - GamePanel.getBoardCols() + 1) < wallKickDistanceX) {
+                wallKickDistanceX = -(distAbs - GamePanel.getBoardCols() + 1);
+            }
+        }
+
+        for(Point p : futureCollisionPoints) {
+            p.translate(wallKickDistanceX, 0);
+        }
+
+        //Collision check for other shapes
         for(Shape shape : getStationaryShapes()) {
             if(checkForCollisionsForShapeYAxis(shape) || checkForCollisionsForShapeXAxis(shape))
                 return false;
         }
 
+        //If all checks passed, set the new rotation
         for(int i = 0; i < futureCollisionPoints.size(); i++) {
             this.getCollisionPoints().set(i, futureCollisionPoints.get(i));
         }
+
         return true;
-    }
-
-    default boolean rotateLeft() {
-        return rotate(-1);
-    }
-
-    default boolean rotateRight() {
-        return rotate(1);
-    }
-
-
-
-    default void hardDrop() {
-        while(moveDown());
-    }
-
-    default void draw(Graphics g) {
-        for(Point p : getCollisionPoints()) {
-            //Fill
-            g.setColor(this.getColor());
-            g.fillRect(p.x * Block.getSizePx(), p.y * Block.getSizePx(), Block.getSizePx(), Block.getSizePx());
-
-            //Border
-            g.setColor(Color.BLACK);
-            g.drawRect(p.x * Block.getSizePx(), p.y * Block.getSizePx(), Block.getSizePx(), Block.getSizePx());
-        }
     }
 
     private boolean checkForCollisionsForShapeXAxis(Shape shapeToCompare) {
@@ -135,7 +168,6 @@ public interface Shape {
             }
         }
 
-
         for(Shape shape : getStationaryShapes()) {
             if(checkForCollisionsForShapeXAxis(shape))
                 return false;
@@ -145,21 +177,5 @@ public interface Shape {
             p.translate(direction, 0);
         }
         return true;
-    }
-
-    default boolean moveLeft() {
-        return moveHorizontaly(-1);
-    }
-
-    default boolean moveRight() {
-        return moveHorizontaly(1);
-    }
-
-    static float getSpeedBlocksPerSeconds() {
-        return 6f;
-    }
-
-    static ArrayList<Shape> getStationaryShapes() {
-        return stationaryShapes;
     }
 }
