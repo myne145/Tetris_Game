@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class SShape implements Shape {
+public class SShape extends Shape {
     private final ArrayList<Point> collisionPoints = new ArrayList<>(Arrays.asList(
             new Point(4,1),
             new Point(3,1),

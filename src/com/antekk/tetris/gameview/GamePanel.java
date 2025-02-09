@@ -1,7 +1,7 @@
 package com.antekk.tetris.gameview;
 
-import com.antekk.tetris.blocks.Block;
 import com.antekk.tetris.blocks.Shape;
+import com.antekk.tetris.blocks.Block;
 import com.antekk.tetris.blocks.shapes.*;
 
 import javax.swing.*;
@@ -9,6 +9,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+
+import static com.antekk.tetris.blocks.Shape.getStationaryShapes;
 
 public class GamePanel extends JPanel implements KeyListener {
     public static final int LEFT = 8 * Block.getSizePx();
@@ -52,7 +54,7 @@ public class GamePanel extends JPanel implements KeyListener {
     private void gameLoop() {
         //if the shape is already in the bottom
         if(!currentShape.moveDown()) {
-            Shape.getStationaryShapes().add(currentShape);
+            getStationaryShapes().add(currentShape);
             setRandomizedCurrentShape();
         }
 
@@ -110,7 +112,7 @@ public class GamePanel extends JPanel implements KeyListener {
 
         //Shapes
         currentShape.draw(g);
-        for(Shape shape : Shape.getStationaryShapes()) {
+        for(Shape shape : getStationaryShapes()) {
             shape.draw(g);
         }
     }

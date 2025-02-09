@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TShape implements Shape {
+public class TShape extends Shape {
     private final ArrayList<Point> collisionPoints = new ArrayList<>(List.of(
             new Point(4,1), //center
             new Point(3, 1),

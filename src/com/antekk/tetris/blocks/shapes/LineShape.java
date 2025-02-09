@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class LineShape implements Shape {
+public class LineShape extends Shape {
     //i hate this code :)
     private final ArrayList<Point> collisionPointsVerticalRight = new ArrayList<>(Arrays.asList(
             new Point(5,2),
@@ -95,7 +95,7 @@ public class LineShape implements Shape {
      */
     @Override
     public boolean moveDown() {
-        boolean canMoveDown = Shape.super.moveDown();
+        boolean canMoveDown = super.moveDown();
         if(!canMoveDown)
             return false;
 
@@ -109,7 +109,7 @@ public class LineShape implements Shape {
      */
     @Override
     public boolean moveLeft() {
-        boolean canMoveLeft = Shape.super.moveLeft();
+        boolean canMoveLeft = super.moveLeft();
         if(!canMoveLeft)
             return false;
 
@@ -123,7 +123,7 @@ public class LineShape implements Shape {
      */
     @Override
     public boolean moveRight() {
-        boolean canMoveRight = Shape.super.moveRight();
+        boolean canMoveRight = super.moveRight();
         if(!canMoveRight)
             return false;
 

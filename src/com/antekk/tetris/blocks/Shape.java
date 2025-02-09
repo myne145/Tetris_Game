@@ -5,46 +5,55 @@ import com.antekk.tetris.gameview.GamePanel;
 import java.awt.*;
 import java.util.ArrayList;
 
-public interface Shape {
-    ArrayList<Shape> stationaryShapes = new ArrayList<>();
+public abstract class Shape {
+    private static final ArrayList<Shape> stationaryShapes = new ArrayList<>();
 
-    Color getColor();
+    public abstract ArrayList<Point> getCollisionPoints();
+    public abstract Color getColor();
 
-    /**
-     *
-     * @return list of collision points, first element is a center point
-     */
-    ArrayList<Point> getCollisionPoints();
-
-    default boolean rotateLeft() {
+    public boolean rotateLeft() {
         return rotate(-1);
     }
 
-    default boolean rotateRight() {
+    public boolean rotateRight() {
         return rotate(1);
     }
 
-    default boolean moveLeft() {
+    public boolean moveLeft() {
         return moveHorizontaly(-1);
     }
 
-    default boolean moveRight() {
+    public boolean moveRight() {
         return moveHorizontaly(1);
     }
 
-    default void hardDrop() {
+    public void hardDrop() {
         while(moveDown());
     }
 
-    static float getSpeedBlocksPerSeconds() {
+    public static float getSpeedBlocksPerSeconds() {
         return 2f;
     }
 
-    static ArrayList<Shape> getStationaryShapes() {
-        return stationaryShapes;
+    public boolean moveDown() {
+        for(Point p : getCollisionPoints()) {
+            if(p.y == GamePanel.getBoardRows() - 1) {
+                return false;
+            }
+        }
+
+        for(Shape shape : getStationaryShapes()) {
+            if(checkForCollisionsForShapeYAxis(shape))
+                return false;
+        }
+
+        for(Point p : getCollisionPoints()) {
+            p.translate(0, 1);
+        }
+        return true;
     }
 
-    default void draw(Graphics g) {
+    public void draw(Graphics g) {
         for(Point p : getCollisionPoints()) {
             //Fill
             g.setColor(this.getColor());
@@ -55,6 +64,7 @@ public interface Shape {
             g.drawRect(GamePanel.LEFT + p.x * Block.getSizePx(), GamePanel.TOP + p.y * Block.getSizePx(), Block.getSizePx(), Block.getSizePx());
         }
     }
+
     /**
      *
      * @param direction 1 is right, -1 is left
@@ -99,7 +109,7 @@ public interface Shape {
         }
 
         //Collision check for other shapes
-        for(Shape shape : getStationaryShapes()) {
+        for(Shape shape : Shape.getStationaryShapes()) {
             if(checkForCollisionsForShapeYAxis(shape) || checkForCollisionsForShapeXAxis(shape))
                 return false;
         }
@@ -137,24 +147,6 @@ public interface Shape {
         return false;
     }
 
-    default boolean moveDown() {
-        for(Point p : getCollisionPoints()) {
-            if(p.y == GamePanel.getBoardRows() - 1) {
-                return false;
-            }
-        }
-
-        for(Shape shape : getStationaryShapes()) {
-            if(checkForCollisionsForShapeYAxis(shape))
-                return false;
-        }
-
-        for(Point p : getCollisionPoints()) {
-            p.translate(0, 1);
-        }
-        return true;
-    }
-
     /**
      *
      * @param direction -1 is left, 1 is right
@@ -177,5 +169,9 @@ public interface Shape {
             p.translate(direction, 0);
         }
         return true;
+    }
+
+    public static ArrayList<Shape> getStationaryShapes() {
+        return stationaryShapes;
     }
 }
