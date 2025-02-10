@@ -5,10 +5,19 @@ import com.antekk.tetris.gameview.GamePanel;
 import java.awt.*;
 import java.util.ArrayList;
 
-public abstract class Shape implements Cloneable{
-    private static final ArrayList<Shape> stationaryShapes = new ArrayList<>();
+import static com.antekk.tetris.blocks.Shapes.getStationaryShapes;
+
+public abstract class Shape implements Cloneable, HeldShape {
+
     protected ArrayList<Point> collisionPoints;
+    protected Shape shadow = this;
     protected Color shapeColor;
+
+    protected abstract void setDefaultValues();
+
+    public Shape() {
+        setDefaultValues();
+    }
 
     public boolean rotateLeft() {
         return rotate(-1);
@@ -27,7 +36,7 @@ public abstract class Shape implements Cloneable{
     }
 
     public void hardDrop() {
-        while(moveDown());
+        while(moveVertically());
     }
 
     public static float getSpeedBlocksPerSeconds() {
@@ -35,19 +44,7 @@ public abstract class Shape implements Cloneable{
     }
 
     public boolean moveDown() {
-        for(Point p : getCollisionPoints()) {
-            if(p.y == GamePanel.getBoardRows() - 1) {
-                return false;
-            }
-        }
-
-        for(Shape shape : getStationaryShapes()) {
-            if(checkForCollisionsForShapeYAxis(shape))
-                return false;
-        }
-
-        this.translate(0,1);
-        return true;
+        return moveVertically();
     }
 
     public void draw(Graphics g) {
@@ -67,12 +64,7 @@ public abstract class Shape implements Cloneable{
      * @param direction 1 is right, -1 is left
      */
     private boolean rotate(int direction) {
-        Shape futureShape;
-        try {
-            futureShape = (Shape) this.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException();
-        }
+        Shape futureShape = (Shape) this.clone();
 
         //Shape rotation
         Point center = (Point) futureShape.getCenterPoint().clone();
@@ -172,15 +164,10 @@ public abstract class Shape implements Cloneable{
         return false;
     }
 
-    /**
-     *
-     * @param direction -1 is left, 1 is right
-     * @return
-     */
-    private boolean moveHorizontaly(int direction) {
+    private boolean moveHorizontaly(int amount) {
         for(Point p : getCollisionPoints()) {
-            if((p.x == GamePanel.getBoardCols() - 1 && direction == 1) ||
-                    (p.x == 0 && direction == -1)) {
+            if((p.x == GamePanel.getBoardCols() - 1 && amount > 0) ||
+                    (p.x == 0 && amount < 0)) {
                 return false;
             }
         }
@@ -188,19 +175,32 @@ public abstract class Shape implements Cloneable{
         if(!checkForCollisionsForShapeXAxis().isEmpty())
             return false;
 
-        translate(direction, 0);
+        translate(amount, 0);
         return true;
     }
 
-    private void translate(int dx, int dy) {
+    public boolean moveVertically() {
+        for(Point p : getCollisionPoints()) {
+            if(p.y == GamePanel.getBoardRows() - 1) {
+                return false;
+            }
+        }
+
+        for(Shape shape : getStationaryShapes()) {
+            if(checkForCollisionsForShapeYAxis(shape))
+                return false;
+        }
+
+        this.translate(0,1);
+        return true;
+    }
+
+    protected void translate(int dx, int dy) {
         for(Point p : getCollisionPoints()) {
             p.translate(dx, dy);
         }
     }
 
-    public static ArrayList<Shape> getStationaryShapes() {
-        return stationaryShapes;
-    }
 
     public ArrayList<Point> getCollisionPoints() {
         return collisionPoints;
@@ -215,8 +215,14 @@ public abstract class Shape implements Cloneable{
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        Shape shape = (Shape) super.clone();
+    protected Object clone() {
+        Shape shape;
+        try {
+            shape = (Shape) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+
         shape.shapeColor = getColor();
         shape.collisionPoints = new ArrayList<>();
         for(Point p : getCollisionPoints())

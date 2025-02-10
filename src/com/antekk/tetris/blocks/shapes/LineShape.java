@@ -1,5 +1,6 @@
 package com.antekk.tetris.blocks.shapes;
 
+import com.antekk.tetris.blocks.Block;
 import com.antekk.tetris.blocks.Shape;
 
 import java.awt.*;
@@ -8,45 +9,63 @@ import java.util.Arrays;
 
 public class LineShape extends Shape {
     //i hate this code :)
-    private final ArrayList<Point> collisionPointsVerticalRight = new ArrayList<>(Arrays.asList(
-            new Point(5,2),
-            new Point(5,0),
-            new Point(5,1),
-            new Point(5,3)
-    ));
-
-    private final ArrayList<Point> collisionPointsVerticalLeft = new ArrayList<>(Arrays.asList(
-            new Point(4,2),
-            new Point(4,0),
-            new Point(4,1),
-            new Point(4,3)
-    ));
-
-    private final ArrayList<Point> collisionPointsHorizontalTop = new ArrayList<>(Arrays.asList(
-            new Point(5,1),
-            new Point(3,1),
-            new Point(4,1),
-            new Point(6,1)
-    ));
-
-    private final ArrayList<Point> collisionPointsHorizontalBottom = new ArrayList<>(Arrays.asList(
-            new Point(5,2),
-            new Point(3,2),
-            new Point(4,2),
-            new Point(6,2)
-    ));
-
-    private final ArrayList<ArrayList<Point>> shapeVariants = new ArrayList<>(Arrays.asList(
-            collisionPointsHorizontalTop, collisionPointsVerticalRight, collisionPointsHorizontalBottom,
-                collisionPointsVerticalLeft
-    ));
+    private ArrayList<Point> collisionPointsVerticalRight;
+    private ArrayList<Point> collisionPointsVerticalLeft;
+    private ArrayList<Point> collisionPointsHorizontalTop;
+    private ArrayList<Point> collisionPointsHorizontalBottom;
+    private ArrayList<ArrayList<Point>> shapeVariants;
 
     //0,1,2,3
     private int rotationState = 0;
 
-    public LineShape() {
+    @Override
+    protected void setDefaultValues() {
+        collisionPointsVerticalRight = new ArrayList<>(Arrays.asList(
+                new Point(5,2),
+                new Point(5,0),
+                new Point(5,1),
+                new Point(5,3)
+        ));
+
+        collisionPointsVerticalLeft = new ArrayList<>(Arrays.asList(
+                new Point(4,2),
+                new Point(4,0),
+                new Point(4,1),
+                new Point(4,3)
+        ));
+
+        collisionPointsHorizontalTop = new ArrayList<>(Arrays.asList(
+                new Point(5,1),
+                new Point(3,1),
+                new Point(4,1),
+                new Point(6,1)
+        ));
+
+        collisionPointsHorizontalBottom = new ArrayList<>(Arrays.asList(
+                new Point(5,2),
+                new Point(3,2),
+                new Point(4,2),
+                new Point(6,2)
+        ));
+
+        shapeVariants = new ArrayList<>(Arrays.asList(
+                collisionPointsHorizontalTop, collisionPointsVerticalRight, collisionPointsHorizontalBottom,
+                collisionPointsVerticalLeft
+        ));
+
+        rotationState = 0;
         collisionPoints = collisionPointsHorizontalTop;
         shapeColor = Color.CYAN;
+    }
+
+    @Override
+    public void setHeld() {
+        setDefaultValues();
+        for(Point p : getCollisionPoints()) {
+            p.x *= 50;
+            p.y *= 50;
+        }
+        translate(-Block.getSizePx(), Block.getSizePx());
     }
 
     private void translateAllVariantsBy(int dx, int dy) {

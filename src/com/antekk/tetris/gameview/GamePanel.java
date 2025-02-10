@@ -2,60 +2,30 @@ package com.antekk.tetris.gameview;
 
 import com.antekk.tetris.blocks.Shape;
 import com.antekk.tetris.blocks.Block;
-import com.antekk.tetris.blocks.shapes.*;
+import com.antekk.tetris.blocks.Shapes;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 
-import static com.antekk.tetris.blocks.Shape.getStationaryShapes;
+import static com.antekk.tetris.blocks.Shapes.getStationaryShapes;
+import static com.antekk.tetris.blocks.Shapes.unlockHeld;
 
 public class GamePanel extends JPanel implements KeyListener {
     public static final int LEFT = 8 * Block.getSizePx();
     public static final int TOP = Block.getSizePx();
-    private final int RIGHT = getBoardCols() * Block.getSizePx();
-    private final int BOTTOM = getBoardRows() * Block.getSizePx();
+    public static final int RIGHT = getBoardCols() * Block.getSizePx();
+    public static final int BOTTOM = getBoardRows() * Block.getSizePx();
     private Shape currentShape;
-    private final ArrayList<Shape> shapesList = new ArrayList<>();
-    private Shape heldShape = new LineShape();
 
-    private void setRandomizedCurrentShape() {
-        if(shapesList.isEmpty()) {
-            //filling the array
-            shapesList.add(new TShape());
-            shapesList.add(new ZShape());
-            shapesList.add(new JShape());
-            shapesList.add(new LShape());
-            shapesList.add(new LineShape());
-            shapesList.add(new SquareShape());
-            shapesList.add(new SShape());
-
-            //randomly shifts elements left or right
-            shapesList.sort((o1, o2) -> (int) (Math.random() * 2) - 1);
-
-
-            //if previous and newly generated shapes are the same swap it with some other shape
-            if(currentShape != null && shapesList.getFirst().getClass() == currentShape.getClass()) {
-                int rand = 0;
-                while(rand == 0) {
-                    rand = (int) (Math.random() * 7);
-                }
-                Shape temp = shapesList.getFirst();
-                shapesList.set(0, shapesList.get(rand));
-                shapesList.set(rand, temp);
-            }
-        }
-        currentShape = shapesList.getFirst();
-        shapesList.removeFirst();
-    }
 
     private void gameLoop() {
         //if the shape is already in the bottom
         if(!currentShape.moveDown()) {
             getStationaryShapes().add(currentShape);
-            setRandomizedCurrentShape();
+            currentShape = Shapes.getRandomizedShape(currentShape);
+            unlockHeld();
         }
 
         repaint();
@@ -77,7 +47,7 @@ public class GamePanel extends JPanel implements KeyListener {
         this.addKeyListener(this);
         setBackground(new Color(238, 240, 242));
 
-        setRandomizedCurrentShape();
+        currentShape = Shapes.getRandomizedShape(currentShape);
         Thread gameThread = getGameThread();
         gameThread.start();
     }
@@ -99,15 +69,8 @@ public class GamePanel extends JPanel implements KeyListener {
         g.drawString("HELD", 3 * Block.getSizePx() - 5, TOP + Block.getSizePx());
         g.drawRoundRect(Block.getSizePx(), TOP, 6 * Block.getSizePx(), 6 * Block.getSizePx(),8,8);
         //TODO: temp
-        for(Point p : heldShape.getCollisionPoints()) {
-            //Fill
-            g.setColor(heldShape.getColor());
-            g.fillRect(Block.getSizePx() * p.x - Block.getSizePx(), GamePanel.TOP + p.y * Block.getSizePx() + Block.getSizePx(), Block.getSizePx(), Block.getSizePx());
-
-            //Border
-            g.setColor(Color.BLACK);
-            g.drawRect(Block.getSizePx() * p.x - Block.getSizePx(), GamePanel.TOP + p.y * Block.getSizePx() + Block.getSizePx(), Block.getSizePx(), Block.getSizePx());
-        }
+        if(Shapes.getHeldShape() != null)
+            Shapes.getHeldShape().drawHeldShape(g);
 
 
         //Shapes
@@ -139,6 +102,7 @@ public class GamePanel extends JPanel implements KeyListener {
             case KeyEvent.VK_SPACE -> currentShape.hardDrop();
             case KeyEvent.VK_UP -> currentShape.rotateRight();
             case KeyEvent.VK_Z -> currentShape.rotateLeft();
+            case KeyEvent.VK_C -> currentShape = Shapes.updateHeldShape(currentShape);
             default -> {
                 return;
             }

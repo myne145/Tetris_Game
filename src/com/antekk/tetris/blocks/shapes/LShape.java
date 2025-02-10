@@ -1,5 +1,6 @@
 package com.antekk.tetris.blocks.shapes;
 
+import com.antekk.tetris.blocks.Block;
 import com.antekk.tetris.blocks.Shape;
 
 import java.awt.*;
@@ -7,7 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class LShape extends Shape {
-    public LShape() {
+    @Override
+    protected void setDefaultValues() {
         collisionPoints = new ArrayList<>(Arrays.asList(
                 new Point(4,1),
                 new Point(3,1),
@@ -15,5 +17,15 @@ public class LShape extends Shape {
                 new Point(5,0)
         ));
         shapeColor = Color.ORANGE;
+    }
+
+    @Override
+    public void setHeld() {
+        setDefaultValues();
+        for(Point p : collisionPoints) {
+            p.x *= 50;
+            p.y *= 50;
+        }
+        translate(-Block.getSizePx() / 2, Block.getSizePx() * 2);
     }
 }
