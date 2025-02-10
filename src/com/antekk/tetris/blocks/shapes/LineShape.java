@@ -44,6 +44,11 @@ public class LineShape extends Shape {
     //0,1,2,3
     private int rotationState = 0;
 
+    public LineShape() {
+        collisionPoints = collisionPointsHorizontalTop;
+        shapeColor = Color.CYAN;
+    }
+
     private void translateAllVariantsBy(int dx, int dy) {
         for(int i = 0; i < shapeVariants.size(); i++) {
             if(i == rotationState)
@@ -77,16 +82,13 @@ public class LineShape extends Shape {
     }
 
     @Override
-    public Color getColor() {
-        return Color.CYAN;
-    }
-
-    @Override
     public ArrayList<Point> getCollisionPoints() {
-        if(rotationState >= 0 && rotationState <= 3)
-            return shapeVariants.get(rotationState);
+        if(rotationState < 0 || rotationState > 3)
+            throw new IllegalArgumentException("Rotation state must be between 0 and 3!");
 
-        throw new IllegalArgumentException("Rotation state must be between 0 and 3!");
+        collisionPoints = shapeVariants.get(rotationState);
+
+        return collisionPoints;
     }
 
     /**

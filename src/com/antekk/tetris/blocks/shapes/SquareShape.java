@@ -7,21 +7,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SquareShape extends Shape {
-    private final ArrayList<Point> collisionPoints = new ArrayList<>(Arrays.asList(
-            new Point(4,0),
-            new Point(5,0),
-            new Point(4,1),
-            new Point(5,1)
-    ));
 
-    @Override
-    public Color getColor() {
-        return Color.YELLOW;
-    }
-
-    @Override
-    public ArrayList<Point> getCollisionPoints() {
-        return collisionPoints;
+    public SquareShape() {
+        collisionPoints = new ArrayList<>(Arrays.asList(
+                new Point(4,0),
+                new Point(5,0),
+                new Point(4,1),
+                new Point(5,1)
+        ));
+        shapeColor = Color.YELLOW;
     }
 
     @Override
