@@ -12,11 +12,11 @@ public interface HeldShape {
         for (Point p : Shapes.getHeldShape().getCollisionPoints()) {
             //Fill
             g.setColor(Shapes.getHeldShape().getColor());
-            g.fillRect(p.x, GamePanel.TOP + p.y, Block.getSizePx(), Block.getSizePx());
+            g.fillRect(p.x, GamePanel.TOP + p.y, Shapes.getBlockSizePx(), Shapes.getBlockSizePx());
 
             //Border
             g.setColor(Color.BLACK);
-            g.drawRect(p.x, GamePanel.TOP + p.y, Block.getSizePx(), Block.getSizePx());
+            g.drawRect(p.x, GamePanel.TOP + p.y, Shapes.getBlockSizePx(), Shapes.getBlockSizePx());
         }
     }
 

@@ -8,7 +8,9 @@ public class Shapes {
     private static final ArrayList<Shape> shapesList = new ArrayList<>();
     private static final ArrayList<Shape> stationaryShapes = new ArrayList<>();
     private static Shape heldShape;
+    private static Shape currentShape;
     private static boolean wasHeldUsed = false;
+    private static Shape shadow;
 
     public static Shape getRandomizedShape(Shape previousShape) {
         if(shapesList.isEmpty()) {
@@ -40,6 +42,7 @@ public class Shapes {
         Shape temp = shapesList.getFirst();
         shapesList.removeFirst();
         return temp;
+//        return new LineShape();
     }
 
     public static Shape updateHeldShape(Shape currentShape) {
@@ -60,6 +63,14 @@ public class Shapes {
         return returnValue;
     }
 
+    public static Shape getCurrentShape() {
+        return currentShape;
+    }
+
+    public static void setCurrentShape(Shape currentShape) {
+        Shapes.currentShape = currentShape;
+    }
+
     public static Shape getHeldShape() {
         return heldShape;
     }
@@ -74,5 +85,9 @@ public class Shapes {
 
     public static void unlockHeld() {
         wasHeldUsed = false;
+    }
+
+    public static int getBlockSizePx() {
+        return 50;
     }
 }

@@ -1,7 +1,6 @@
 package com.antekk.tetris.gameview;
 
 import com.antekk.tetris.blocks.Shape;
-import com.antekk.tetris.blocks.Block;
 import com.antekk.tetris.blocks.Shapes;
 
 import javax.swing.*;
@@ -9,22 +8,22 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import static com.antekk.tetris.blocks.Shapes.getStationaryShapes;
-import static com.antekk.tetris.blocks.Shapes.unlockHeld;
+import static com.antekk.tetris.blocks.Shapes.*;
+import static com.antekk.tetris.blocks.Shapes.getCurrentShape;
+import static com.antekk.tetris.blocks.Shapes.setCurrentShape;
 
 public class GamePanel extends JPanel implements KeyListener {
-    public static final int LEFT = 8 * Block.getSizePx();
-    public static final int TOP = Block.getSizePx();
-    public static final int RIGHT = getBoardCols() * Block.getSizePx();
-    public static final int BOTTOM = getBoardRows() * Block.getSizePx();
-    private Shape currentShape;
+    public static final int LEFT = 8 * getBlockSizePx();
+    public static final int TOP = getBlockSizePx();
+    public static final int RIGHT = getBoardCols() * getBlockSizePx();
+    public static final int BOTTOM = getBoardRows() * getBlockSizePx();
 
 
     private void gameLoop() {
         //if the shape is already in the bottom
-        if(!currentShape.moveDown()) {
-            getStationaryShapes().add(currentShape);
-            currentShape = Shapes.getRandomizedShape(currentShape);
+        if(!getCurrentShape().moveDown()) {
+            getStationaryShapes().add(getCurrentShape());
+            setCurrentShape(Shapes.getRandomizedShape(getCurrentShape()));
             unlockHeld();
         }
 
@@ -47,7 +46,7 @@ public class GamePanel extends JPanel implements KeyListener {
         this.addKeyListener(this);
         setBackground(new Color(238, 240, 242));
 
-        currentShape = Shapes.getRandomizedShape(currentShape);
+        Shapes.setCurrentShape(getRandomizedShape(getCurrentShape()));
         Thread gameThread = getGameThread();
         gameThread.start();
     }
@@ -63,18 +62,17 @@ public class GamePanel extends JPanel implements KeyListener {
         g.fillRoundRect(LEFT+1, TOP+1, RIGHT-1, BOTTOM-1,8,8);
 
         //hold
-        g.fillRoundRect(Block.getSizePx() + 1, TOP+1, 6 * Block.getSizePx() - 1, 6 * Block.getSizePx() - 1,8,8);
+        g.fillRoundRect(getBlockSizePx() + 1, TOP+1, 6 * getBlockSizePx() - 1, 6 * getBlockSizePx() - 1,8,8);
         g.setColor(new Color(28, 28, 28)); //border
         g.setFont(g.getFont().deriveFont(36f).deriveFont(Font.BOLD));
-        g.drawString("HELD", 3 * Block.getSizePx() - 5, TOP + Block.getSizePx());
-        g.drawRoundRect(Block.getSizePx(), TOP, 6 * Block.getSizePx(), 6 * Block.getSizePx(),8,8);
+        g.drawString("HELD", 3 * getBlockSizePx() - 5, TOP + getBlockSizePx());
+        g.drawRoundRect(getBlockSizePx(), TOP, 6 * getBlockSizePx(), 6 * getBlockSizePx(),8,8);
         //TODO: temp
         if(Shapes.getHeldShape() != null)
             Shapes.getHeldShape().drawHeldShape(g);
 
-
         //Shapes
-        currentShape.draw(g);
+        getCurrentShape().draw(g);
         for(Shape shape : getStationaryShapes()) {
             shape.draw(g);
         }
@@ -96,13 +94,13 @@ public class GamePanel extends JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_RIGHT -> currentShape.moveRight();
-            case KeyEvent.VK_LEFT -> currentShape.moveLeft();
-            case KeyEvent.VK_DOWN -> currentShape.moveDown();
-            case KeyEvent.VK_SPACE -> currentShape.hardDrop();
-            case KeyEvent.VK_UP -> currentShape.rotateRight();
-            case KeyEvent.VK_Z -> currentShape.rotateLeft();
-            case KeyEvent.VK_C -> currentShape = Shapes.updateHeldShape(currentShape);
+            case KeyEvent.VK_RIGHT -> getCurrentShape().moveRight();
+            case KeyEvent.VK_LEFT -> getCurrentShape().moveLeft();
+            case KeyEvent.VK_DOWN -> getCurrentShape().moveDown();
+            case KeyEvent.VK_SPACE -> getCurrentShape().hardDrop();
+            case KeyEvent.VK_UP -> getCurrentShape().rotateRight();
+            case KeyEvent.VK_Z -> getCurrentShape().rotateLeft();
+            case KeyEvent.VK_C -> setCurrentShape(updateHeldShape(getCurrentShape()));
             default -> {
                 return;
             }
