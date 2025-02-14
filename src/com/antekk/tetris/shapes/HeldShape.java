@@ -1,4 +1,4 @@
-package com.antekk.tetris.blocks;
+package com.antekk.tetris.shapes;
 
 import com.antekk.tetris.gameview.GamePanel;
 

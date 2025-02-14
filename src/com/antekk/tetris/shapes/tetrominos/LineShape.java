@@ -1,7 +1,7 @@
-package com.antekk.tetris.blocks.shapes;
+package com.antekk.tetris.shapes.tetrominos;
 
-import com.antekk.tetris.blocks.Shape;
-import com.antekk.tetris.blocks.Shapes;
+import com.antekk.tetris.shapes.Shape;
+import com.antekk.tetris.shapes.Shapes;
 import com.antekk.tetris.gameview.GamePanel;
 
 import java.awt.*;
@@ -28,7 +28,13 @@ public class LineShape extends Shape {
     @Override
     public void setHeld() {
         super.setHeld();
-        move(-Shapes.getBlockSizePx(), Shapes.getBlockSizePx());
+        move(-Shapes.getBlockSizePx(), 2 * Shapes.getBlockSizePx());
+    }
+
+    @Override
+    public void setAsNextShape() {
+        super.setAsNextShape();
+        move(17 * Shapes.getBlockSizePx(), 2 * Shapes.getBlockSizePx());
     }
 
     @Override

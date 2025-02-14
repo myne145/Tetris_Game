@@ -1,13 +1,13 @@
-package com.antekk.tetris.blocks;
+package com.antekk.tetris.shapes;
 
 import com.antekk.tetris.gameview.GamePanel;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-import static com.antekk.tetris.blocks.Shapes.getStationaryShapes;
+import static com.antekk.tetris.shapes.Shapes.getStationaryShapes;
 
-public abstract class Shape implements Cloneable, HeldShape {
+public abstract class Shape implements Cloneable, HeldShape, NextShape {
     protected ArrayList<Point> collisionPoints;
     protected Color shapeColor;
 
@@ -57,16 +57,7 @@ public abstract class Shape implements Cloneable, HeldShape {
         }
     }
 
-    @Override
-    public void setHeld() {
-        setDefaultValues();
-        for(Point p : getCollisionPoints()) {
-            p.x *= 50;
-            p.y *= 50;
-        }
-    }
-
-    protected void handleWallKicks() {
+    protected boolean handleWallKicks() {
         //TODO: not finished
         //Wall kicks
         int wallKickDistanceX = 0;
@@ -98,8 +89,15 @@ public abstract class Shape implements Cloneable, HeldShape {
         if(distance < 0)
             maxDistance *= -1;
 
+        for(Point p : getCollisionPoints()) {
+            if(p.x + maxDistance < 0)
+                return false;
+        }
+
         move(maxDistance, 0);
+        return true;
     }
+
     /**
      *
      * @param direction 1 is right, -1 is left
@@ -126,7 +124,8 @@ public abstract class Shape implements Cloneable, HeldShape {
 
         futureShape.move(dx, dy);
 
-        futureShape.handleWallKicks();
+        if(!futureShape.handleWallKicks())
+            return false;
 
 
 //        if(!futureShape.checkForCollisionsForShapeXAxis().isEmpty())
@@ -209,6 +208,23 @@ public abstract class Shape implements Cloneable, HeldShape {
         }
     }
 
+    private void multiplyPoints() {
+        setDefaultValues();
+        for(Point p : getCollisionPoints()) {
+            p.x *= Shapes.getBlockSizePx();
+            p.y *= Shapes.getBlockSizePx();
+        }
+    }
+
+    @Override
+    public void setHeld() {
+        multiplyPoints();
+    }
+
+    @Override
+    public void setAsNextShape() {
+        multiplyPoints();
+    }
 
     public ArrayList<Point> getCollisionPoints() {
         return collisionPoints;

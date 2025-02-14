@@ -1,16 +1,18 @@
 package com.antekk.tetris.gameview;
 
-import com.antekk.tetris.blocks.Shape;
-import com.antekk.tetris.blocks.Shapes;
+import com.antekk.tetris.gameview.displaypanels.HeldShapePanel;
+import com.antekk.tetris.gameview.displaypanels.NextShapePanel;
+import com.antekk.tetris.shapes.Shape;
+import com.antekk.tetris.shapes.Shapes;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import static com.antekk.tetris.blocks.Shapes.*;
-import static com.antekk.tetris.blocks.Shapes.getCurrentShape;
-import static com.antekk.tetris.blocks.Shapes.setCurrentShape;
+import static com.antekk.tetris.shapes.Shapes.*;
+import static com.antekk.tetris.shapes.Shapes.getCurrentShape;
+import static com.antekk.tetris.shapes.Shapes.setCurrentShape;
 
 public class GamePanel extends JPanel implements KeyListener {
     public static final int LEFT = 8 * getBlockSizePx();
@@ -18,12 +20,15 @@ public class GamePanel extends JPanel implements KeyListener {
     public static final int RIGHT = getBoardCols() * getBlockSizePx();
     public static final int BOTTOM = getBoardRows() * getBlockSizePx();
 
+    private final HeldShapePanel heldShapePanel = new HeldShapePanel();
+    private final NextShapePanel nextShapePanel = new NextShapePanel();
+
 
     private void gameLoop() {
         //if the shape is already in the bottom
         if(!getCurrentShape().moveDown()) {
             getStationaryShapes().add(getCurrentShape());
-            setCurrentShape(Shapes.getRandomizedShape(getCurrentShape()));
+            setCurrentShape(Shapes.getRandomizedShape());
             unlockHeld();
         }
 
@@ -46,7 +51,7 @@ public class GamePanel extends JPanel implements KeyListener {
         this.addKeyListener(this);
         setBackground(new Color(238, 240, 242));
 
-        Shapes.setCurrentShape(getRandomizedShape(getCurrentShape()));
+        Shapes.setCurrentShape(getRandomizedShape());
         Thread gameThread = getGameThread();
         gameThread.start();
     }
@@ -61,15 +66,8 @@ public class GamePanel extends JPanel implements KeyListener {
         g.setColor(new Color(250, 250, 255)); //fill
         g.fillRoundRect(LEFT+1, TOP+1, RIGHT-1, BOTTOM-1,8,8);
 
-        //hold
-        g.fillRoundRect(getBlockSizePx() + 1, TOP+1, 6 * getBlockSizePx() - 1, 6 * getBlockSizePx() - 1,8,8);
-        g.setColor(new Color(28, 28, 28)); //border
-        g.setFont(g.getFont().deriveFont(36f).deriveFont(Font.BOLD));
-        g.drawString("HELD", 3 * getBlockSizePx() - 5, TOP + getBlockSizePx());
-        g.drawRoundRect(getBlockSizePx(), TOP, 6 * getBlockSizePx(), 6 * getBlockSizePx(),8,8);
-        //TODO: temp
-        if(Shapes.getHeldShape() != null)
-            Shapes.getHeldShape().drawHeldShape(g);
+        heldShapePanel.drawPanel(g);
+        nextShapePanel.drawPanel(g);
 
         //Shapes
         getCurrentShape().draw(g);
@@ -80,7 +78,7 @@ public class GamePanel extends JPanel implements KeyListener {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(RIGHT + LEFT + 200, BOTTOM + TOP);
+        return new Dimension(RIGHT + LEFT + 8 * Shapes.getBlockSizePx(), BOTTOM + TOP);
     }
 
     public static int getBoardRows() {

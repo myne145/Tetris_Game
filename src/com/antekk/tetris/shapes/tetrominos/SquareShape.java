@@ -1,7 +1,7 @@
-package com.antekk.tetris.blocks.shapes;
+package com.antekk.tetris.shapes.tetrominos;
 
-import com.antekk.tetris.blocks.Shape;
-import com.antekk.tetris.blocks.Shapes;
+import com.antekk.tetris.shapes.Shape;
+import com.antekk.tetris.shapes.Shapes;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -24,6 +24,12 @@ public class SquareShape extends Shape {
     public void setHeld() {
         super.setHeld();
         move(-Shapes.getBlockSizePx(), Shapes.getBlockSizePx() * 2);
+    }
+
+    @Override
+    public void setAsNextShape() {
+        super.setAsNextShape();
+        move(17 * Shapes.getBlockSizePx(), 2 * Shapes.getBlockSizePx());
     }
 
     @Override

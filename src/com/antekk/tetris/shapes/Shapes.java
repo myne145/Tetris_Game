@@ -1,6 +1,6 @@
-package com.antekk.tetris.blocks;
+package com.antekk.tetris.shapes;
 
-import com.antekk.tetris.blocks.shapes.*;
+import com.antekk.tetris.shapes.tetrominos.*;
 
 import java.util.ArrayList;
 
@@ -10,10 +10,9 @@ public class Shapes {
     private static Shape heldShape;
     private static Shape currentShape;
     private static boolean wasHeldUsed = false;
-    private static Shape shadow;
 
-    public static Shape getRandomizedShape(Shape previousShape) {
-        if(shapesList.isEmpty()) {
+    public static Shape getRandomizedShape() {
+        if(shapesList.size() == 1 || shapesList.isEmpty()) {
             //filling the array
             shapesList.add(new TShape());
             shapesList.add(new ZShape());
@@ -23,26 +22,27 @@ public class Shapes {
             shapesList.add(new SquareShape());
             shapesList.add(new SShape());
 
+
+            Shape firstShape = shapesList.getFirst();
+            shapesList.removeFirst();
+
             //randomly shifts elements left or right
             shapesList.sort((o1, o2) -> (int) (Math.random() * 2) - 1);
+            shapesList.addFirst(firstShape);
 
 
-            //if previous and newly generated shapes are the same swap it with some other shape
-            if(previousShape != null && shapesList.getFirst().getClass() == previousShape.getClass()) {
-                int rand = 0;
-                while(rand == 0) {
-                    rand = (int) (Math.random() * 7);
-                }
-                Shape temp = shapesList.getFirst();
-                shapesList.set(0, shapesList.get(rand));
-                shapesList.set(rand, temp);
+            if(shapesList.get(0).getClass() == shapesList.get(1).getClass()) {
+                int rand = (int) (Math.random() * 6) + 1;
+                Shape temp = shapesList.get(rand);
+                shapesList.set(rand, shapesList.get(1));
+                shapesList.set(1, temp);
             }
         }
 
         Shape temp = shapesList.getFirst();
         shapesList.removeFirst();
+        temp.setDefaultValues();
         return temp;
-//        return new LineShape();
     }
 
     public static Shape updateHeldShape(Shape currentShape) {
@@ -51,7 +51,7 @@ public class Shapes {
 
         Shape returnValue;
         if(heldShape == null)
-            returnValue = getRandomizedShape(currentShape);
+            returnValue = getRandomizedShape();
         else
             returnValue = heldShape;
 
@@ -87,7 +87,12 @@ public class Shapes {
         wasHeldUsed = false;
     }
 
+    public static Shape getNextShape() {
+        shapesList.getFirst().setAsNextShape();
+        return shapesList.getFirst();
+    }
+
     public static int getBlockSizePx() {
-        return 50;
+        return 40;
     }
 }
