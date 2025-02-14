@@ -48,6 +48,9 @@ public class LineShape extends Shape {
 
     @Override
     public Point getCenterPoint() {
+        if(collisionPoints.isEmpty())
+            return new Point(0, 0);
+
         if(rotationState == 0)
             return new Point(getCollisionPoints().get(0).x,getCollisionPoints().get(0).y + 1);
         else if (rotationState == 1)

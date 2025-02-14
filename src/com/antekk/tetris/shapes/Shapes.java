@@ -1,8 +1,12 @@
 package com.antekk.tetris.shapes;
 
+import com.antekk.tetris.gameview.GamePanel;
 import com.antekk.tetris.shapes.tetrominos.*;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Shapes {
     private static final ArrayList<Shape> shapesList = new ArrayList<>();
@@ -22,14 +26,12 @@ public class Shapes {
             shapesList.add(new SquareShape());
             shapesList.add(new SShape());
 
-
             Shape firstShape = shapesList.getFirst();
             shapesList.removeFirst();
 
             //randomly shifts elements left or right
             shapesList.sort((o1, o2) -> (int) (Math.random() * 2) - 1);
             shapesList.addFirst(firstShape);
-
 
             if(shapesList.get(0).getClass() == shapesList.get(1).getClass()) {
                 int rand = (int) (Math.random() * 6) + 1;
@@ -45,7 +47,7 @@ public class Shapes {
         return temp;
     }
 
-    public static Shape updateHeldShape(Shape currentShape) {
+    private static Shape updateHeldShape(Shape currentShape) {
         if(wasHeldUsed)
             return currentShape;
 
@@ -63,12 +65,77 @@ public class Shapes {
         return returnValue;
     }
 
+    public static void clearFullLines() {
+        int start = 0;
+        int end = Integer.MAX_VALUE;
+        for(int currentYpos = 0; currentYpos < GamePanel.getBoardRows(); currentYpos++) {
+            boolean isLineFull = isLineFull(currentYpos);
+            if(isLineFull && currentYpos > start) {
+                start = currentYpos;
+            }
+            if(isLineFull && currentYpos < end) {
+                end = currentYpos;
+            }
+        }
+
+        if(end == Integer.MAX_VALUE)
+            return;
+        clearLineAt(start, end);
+    }
+
+    private static boolean isLineFull(int y) {
+        ArrayList<Integer> xPositions = new ArrayList<>();
+
+        for(Shape shape : getStationaryShapes()) {
+            for(Point p : shape.getCollisionPoints()) {
+                if(p.y == y)
+                    xPositions.add(p.x);
+            }
+        }
+
+        return xPositions.size() == GamePanel.getBoardCols();
+    }
+
+    private static void clearLineAt(int yStart, int yEnd) {
+        if(yStart > yEnd) {
+            int temp = yEnd;
+            yEnd = yStart;
+            yStart = temp;
+        }
+
+        for(Shape shape : (ArrayList<Shape>) getStationaryShapes().clone()) {
+            ArrayList<Point> temp = (ArrayList<Point>) shape.getCollisionPoints().clone();
+            for(Point p : temp) {
+                if(p.y >= yStart && p.y <= yEnd) {
+                    shape.getCollisionPoints().remove(p);
+                }
+            }
+            if(shape.getCollisionPoints().isEmpty())
+                stationaryShapes.remove(shape);
+        }
+
+        int distanceToMoveLinesDownBy = yEnd - yStart + 1;
+        for(Shape shape : getStationaryShapes()) {
+            for(Point p : shape.getCollisionPoints()) {
+                if(p.y <= yStart) {
+                    p.translate(0, distanceToMoveLinesDownBy);
+                }
+
+            }
+        }
+
+    }
+
+    public static void swapHeldAndCurrentShapes() {
+        currentShape = updateHeldShape(currentShape);
+    }
+
     public static Shape getCurrentShape() {
         return currentShape;
     }
 
-    public static void setCurrentShape(Shape currentShape) {
-        Shapes.currentShape = currentShape;
+    public static void updateCurrentShape() {
+        currentShape = getRandomizedShape();
     }
 
     public static Shape getHeldShape() {

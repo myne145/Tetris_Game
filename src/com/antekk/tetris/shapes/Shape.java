@@ -10,6 +10,7 @@ import static com.antekk.tetris.shapes.Shapes.getStationaryShapes;
 public abstract class Shape implements Cloneable, HeldShape, NextShape {
     protected ArrayList<Point> collisionPoints;
     protected Color shapeColor;
+    private boolean lockXPos = false;
 
     protected abstract void setDefaultValues();
 
@@ -34,11 +35,12 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape {
     }
 
     public void hardDrop() {
+        lockXPos = true;
         while(moveVertically());
     }
 
     public static float getSpeedBlocksPerSeconds() {
-        return 2f;
+        return 4f;
     }
 
     public boolean moveDown() {
@@ -54,6 +56,12 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape {
             //Border
             g.setColor(Color.BLACK);
             g.drawRect(GamePanel.LEFT + p.x * Shapes.getBlockSizePx(), GamePanel.TOP + p.y * Shapes.getBlockSizePx(), Shapes.getBlockSizePx(), Shapes.getBlockSizePx());
+
+
+//            g.setColor(Color.BLACK);
+//            for(Point collidingPoint : getCollisionsForPoint(p)) {
+//                g.fillOval(GamePanel.LEFT + collidingPoint.x * Shapes.getBlockSizePx() - 8, GamePanel.TOP + collidingPoint.y * Shapes.getBlockSizePx() - 8, 16, 16);
+//            }
         }
     }
 
@@ -61,6 +69,7 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape {
         //TODO: not finished
         //Wall kicks
         int wallKickDistanceX = 0;
+        int wallKickDistanceY = 0;
         for(Point p : getCollisionPoints()) {
             int distAbs = Math.abs(p.x);
             if(p.x < 0 && distAbs > wallKickDistanceX) {
@@ -71,30 +80,35 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape {
             if(p.x >= GamePanel.getBoardCols() && -(distAbs - GamePanel.getBoardCols() + 1) < wallKickDistanceX) {
                 wallKickDistanceX = -(distAbs - GamePanel.getBoardCols() + 1);
             }
-        }
 
-        move(wallKickDistanceX, 0);
-
-        ArrayList<Point> collisions = getCollisionsForPoint(getCenterPoint());
-        int maxDistance= 0;
-        int distance = 0;
-
-        for(Point p : collisions) {
-            distance = getCenterPoint().x - p.x;
-            if(Math.abs(distance) > maxDistance) {
-                maxDistance = Math.abs(distance);
+            if(p.y >= GamePanel.getBoardRows() - 1 && GamePanel.getBoardRows() - 1 - p.y < wallKickDistanceY) {
+                wallKickDistanceY = GamePanel.getBoardRows() - 1 - p.y;
             }
         }
 
-        if(distance < 0)
-            maxDistance *= -1;
+        move(wallKickDistanceX, wallKickDistanceY);
+
+        ArrayList<Point> collisions = getCollisionsForPoint(getCenterPoint());
+        int maxDistanceX = 0;
+        int distanceX = 0;
+
+        for(Point p : collisions) {
+            distanceX = getCenterPoint().x - p.x;
+
+            if(Math.abs(distanceX) > maxDistanceX) {
+                maxDistanceX = Math.abs(distanceX);
+            }
+        }
+
+        if(distanceX < 0)
+            maxDistanceX *= -1;
 
         for(Point p : getCollisionPoints()) {
-            if(p.x + maxDistance < 0)
+            if(p.x + maxDistanceX < 0)
                 return false;
         }
 
-        move(maxDistance, 0);
+        move(maxDistanceX, 0);
         return true;
     }
 
@@ -139,13 +153,24 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape {
     private ArrayList<Point> getCollisionsForPoint(Point p) {
         ArrayList<Point> points = new ArrayList<>();
         for(Shape shape : getStationaryShapes()) {
+            if(shape == this)
+                continue;
+
             for (Point pointToCheck : shape.getCollisionPoints()) {
-                if (p.x + 1 == pointToCheck.x && p.y == pointToCheck.y) {
+                if ((p.x + 1 == pointToCheck.x || p.x - 1 == pointToCheck.x) && p.y == pointToCheck.y) {
+//                    System.out.println("Collision at " + pointToCheck.x + ", " + pointToCheck.y + " for " + p.x + ", " + p.y);
+                    points.add(pointToCheck);
+                    continue;
+                }
+
+                if(p.x == pointToCheck.x && (p.y + 1 == pointToCheck.y || p.y - 1 == pointToCheck.y)) {
+//                    System.out.println("Collision at " + pointToCheck.x + ", " + pointToCheck.y + " for " + p.x + ", " + p.y);
                     points.add(pointToCheck);
                 }
-                if (p.x - 1 == pointToCheck.x && p.y == pointToCheck.y) {
-                    points.add(pointToCheck);
-                }
+
+//                if (p.x - 1 == pointToCheck.x && p.y == pointToCheck.y) {
+//                    points.add(pointToCheck);
+//                }
             }
         }
         return points;
@@ -203,6 +228,8 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape {
     }
 
     protected void move(int dx, int dy) {
+        if(lockXPos)
+            dx = 0;
         for(Point p : getCollisionPoints()) {
             p.translate(dx, dy);
         }

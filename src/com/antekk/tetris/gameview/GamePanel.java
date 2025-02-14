@@ -12,7 +12,7 @@ import java.awt.event.KeyListener;
 
 import static com.antekk.tetris.shapes.Shapes.*;
 import static com.antekk.tetris.shapes.Shapes.getCurrentShape;
-import static com.antekk.tetris.shapes.Shapes.setCurrentShape;
+import static com.antekk.tetris.shapes.Shapes.updateCurrentShape;
 
 public class GamePanel extends JPanel implements KeyListener {
     public static final int LEFT = 8 * getBlockSizePx();
@@ -23,12 +23,13 @@ public class GamePanel extends JPanel implements KeyListener {
     private final HeldShapePanel heldShapePanel = new HeldShapePanel();
     private final NextShapePanel nextShapePanel = new NextShapePanel();
 
-
     private void gameLoop() {
+//        getCurrentShape().rotateRight();
         //if the shape is already in the bottom
         if(!getCurrentShape().moveDown()) {
             getStationaryShapes().add(getCurrentShape());
-            setCurrentShape(Shapes.getRandomizedShape());
+            Shapes.clearFullLines();
+            updateCurrentShape();
             unlockHeld();
         }
 
@@ -41,29 +42,14 @@ public class GamePanel extends JPanel implements KeyListener {
         gameLoop();
     }
 
-    private Thread getGameThread() {
-        return new Thread(this::gameLoop);
-    }
-
-    protected GamePanel() {
-        this.setFocusable(true);
-        this.requestFocus();
-        this.addKeyListener(this);
-        setBackground(new Color(238, 240, 242));
-
-        Shapes.setCurrentShape(getRandomizedShape());
-        Thread gameThread = getGameThread();
-        gameThread.start();
-    }
-
     @Override
     protected synchronized void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         //Main game area
-        g.setColor(new Color(28, 28, 28)); //border
+        g.setColor(TetrisColors.foregroundColor); //border
         g.drawRoundRect(LEFT, TOP, RIGHT, BOTTOM,8,8);
-        g.setColor(new Color(250, 250, 255)); //fill
+        g.setColor(TetrisColors.backgroundColor); //fill
         g.fillRoundRect(LEFT+1, TOP+1, RIGHT-1, BOTTOM-1,8,8);
 
         heldShapePanel.drawPanel(g);
@@ -71,22 +57,9 @@ public class GamePanel extends JPanel implements KeyListener {
 
         //Shapes
         getCurrentShape().draw(g);
-        for(Shape shape : getStationaryShapes()) {
+        for(Shape shape : getStationaryShapes()) { //TODO ConcurrentModificationException here
             shape.draw(g);
         }
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(RIGHT + LEFT + 8 * Shapes.getBlockSizePx(), BOTTOM + TOP);
-    }
-
-    public static int getBoardRows() {
-        return 20;
-    }
-
-    public static int getBoardCols() {
-        return 10;
     }
 
     @Override
@@ -98,7 +71,7 @@ public class GamePanel extends JPanel implements KeyListener {
             case KeyEvent.VK_SPACE -> getCurrentShape().hardDrop();
             case KeyEvent.VK_UP -> getCurrentShape().rotateRight();
             case KeyEvent.VK_Z -> getCurrentShape().rotateLeft();
-            case KeyEvent.VK_C -> setCurrentShape(updateHeldShape(getCurrentShape()));
+            case KeyEvent.VK_C -> swapHeldAndCurrentShapes();
             default -> {
                 return;
             }
@@ -114,5 +87,33 @@ public class GamePanel extends JPanel implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
 
+    }
+
+    protected GamePanel() {
+        this.setFocusable(true);
+        this.requestFocus();
+        this.addKeyListener(this);
+        setBackground(TetrisColors.backgroundColor);
+
+        Shapes.updateCurrentShape();
+        Thread gameThread = getGameThread();
+        gameThread.start();
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(RIGHT + LEFT + 8 * Shapes.getBlockSizePx(), BOTTOM + TOP);
+    }
+
+    public static int getBoardRows() {
+        return 20;
+    }
+
+    public static int getBoardCols() {
+        return 10;
+    }
+
+    private Thread getGameThread() {
+        return new Thread(this::gameLoop);
     }
 }
