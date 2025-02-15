@@ -14,6 +14,7 @@ public class Shapes {
     private static Shape heldShape;
     private static Shape currentShape;
     private static boolean wasHeldUsed = false;
+    public static Shape shadow;
 
     public static Shape getRandomizedShape() {
         if(shapesList.size() == 1 || shapesList.isEmpty()) {
@@ -128,6 +129,7 @@ public class Shapes {
 
     public static void swapHeldAndCurrentShapes() {
         currentShape = updateHeldShape(currentShape);
+        shadow = (Shape) currentShape.clone();
     }
 
     public static Shape getCurrentShape() {
@@ -136,6 +138,10 @@ public class Shapes {
 
     public static void updateCurrentShape() {
         currentShape = getRandomizedShape();
+        shadow = (Shape) currentShape.clone();
+
+        shadow.reloadShadow();
+        while(shadow.moveDown());
     }
 
     public static Shape getHeldShape() {

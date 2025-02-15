@@ -6,8 +6,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 import static com.antekk.tetris.shapes.Shapes.getStationaryShapes;
+import static com.antekk.tetris.shapes.Shapes.shadow;
 
-public abstract class Shape implements Cloneable, HeldShape, NextShape {
+public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowShape {
     protected ArrayList<Point> collisionPoints;
     protected Color shapeColor;
     private boolean lockXPos = false;
@@ -19,10 +20,16 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape {
     }
 
     public boolean rotateLeft() {
+        reloadShadow();
+        shadow.rotate(-1);
+        while(shadow.moveDown());
         return rotate(-1);
     }
 
     public boolean rotateRight() {
+        reloadShadow();
+        shadow.rotate(1);
+        while(shadow.moveDown());
         return rotate(1);
     }
 
@@ -63,6 +70,24 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape {
 //                g.fillOval(GamePanel.LEFT + collidingPoint.x * Shapes.getBlockSizePx() - 8, GamePanel.TOP + collidingPoint.y * Shapes.getBlockSizePx() - 8, 16, 16);
 //            }
         }
+    }
+
+    @Override
+    public void reloadShadow() {
+        int dx = this.getCenterPoint().x - shadow.getCenterPoint().x;
+        int dy = this.getCenterPoint().y - shadow.getCenterPoint().y;
+        shadow.move(dx, dy);
+    }
+
+    @Override
+    public void drawAsShadow(Graphics2D g) {
+        //Border
+        g.setColor(Color.BLACK);
+        g.setStroke(ShadowShape.shadowShapeBorder);
+        for(Point p : getCollisionPoints()) {
+            g.drawRect(GamePanel.LEFT + p.x * Shapes.getBlockSizePx(), GamePanel.TOP + p.y * Shapes.getBlockSizePx(), Shapes.getBlockSizePx(), Shapes.getBlockSizePx());
+        }
+        g.setStroke(ShadowShape.defaultBorder);
     }
 
     protected boolean handleWallKicks() {
@@ -208,6 +233,9 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape {
             return false;
 
         move(amount, 0);
+        reloadShadow();
+        while(shadow.moveDown());
+
         return true;
     }
 

@@ -55,6 +55,9 @@ public class GamePanel extends JPanel implements KeyListener {
         heldShapePanel.drawPanel(g);
         nextShapePanel.drawPanel(g);
 
+        if(shadow != null)
+            shadow.drawAsShadow((Graphics2D) g);
+
         //Shapes
         getCurrentShape().draw(g);
         for(Shape shape : getStationaryShapes()) { //TODO ConcurrentModificationException here
