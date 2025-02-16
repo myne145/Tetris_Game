@@ -1,7 +1,10 @@
-package com.antekk.tetris.shapes;
+package com.antekk.tetris.game;
 
-import com.antekk.tetris.gameview.TetrisGamePanel;
-import com.antekk.tetris.shapes.tetrominos.*;
+import com.antekk.tetris.game.player.ScoreValue;
+import com.antekk.tetris.game.player.TetrisPlayer;
+import com.antekk.tetris.game.shapes.Shape;
+import com.antekk.tetris.view.TetrisGamePanel;
+import com.antekk.tetris.game.tetrominos.*;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -13,9 +16,9 @@ public class Shapes {
     private static Shape currentShape;
     private static boolean wasHeldUsed = false;
     public static Shape shadow;
-    public static long score = 0;
-    private static long linesCleared = 0;
-
+    private static final TetrisPlayer currentPlayer = new TetrisPlayer();
+    
+    
     public static Shape getRandomizedShape() {
         if(shapesList.size() == 1 || shapesList.isEmpty()) {
             //filling the array
@@ -115,16 +118,17 @@ public class Shapes {
                 stationaryShapes.remove(shape);
         }
 
-        int distanceToMoveLinesDownBy = yEnd - yStart + 1;
+        int clearedLines = yEnd - yStart + 1;
         for(Shape shape : getStationaryShapes()) {
             for(Point p : shape.getCollisionPoints()) {
                 if(p.y <= yStart) {
-                    p.translate(0, distanceToMoveLinesDownBy);
+                    p.translate(0, clearedLines);
                 }
 
             }
         }
-        linesCleared += distanceToMoveLinesDownBy;
+        currentPlayer.linesCleared += clearedLines;
+        currentPlayer.addNonMultipliedScore(ScoreValue.fromClearedLines(clearedLines));
     }
 
     public static void swapHeldAndCurrentShapes() {
@@ -173,7 +177,11 @@ public class Shapes {
         return 4f;
     }
 
+    public static TetrisPlayer getCurrentPlayer() {
+        return currentPlayer;
+    }
+
     public static long getLinesCleared() {
-        return linesCleared;
+        return getCurrentPlayer().linesCleared;
     }
 }

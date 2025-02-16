@@ -1,11 +1,11 @@
-package com.antekk.tetris.gameview.displays.shapes;
+package com.antekk.tetris.view.displays.shapes;
 
-import com.antekk.tetris.shapes.Shapes;
+import com.antekk.tetris.game.Shapes;
 
 import java.awt.*;
 
-import static com.antekk.tetris.gameview.TetrisGamePanel.TOP;
-import static com.antekk.tetris.shapes.Shapes.getBlockSizePx;
+import static com.antekk.tetris.view.TetrisGamePanel.TOP;
+import static com.antekk.tetris.game.Shapes.getBlockSizePx;
 
 public class HeldShapeDisplay extends TetrisShapeDisplay {
     public HeldShapeDisplay() {

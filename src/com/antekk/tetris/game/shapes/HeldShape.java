@@ -1,6 +1,7 @@
-package com.antekk.tetris.shapes;
+package com.antekk.tetris.game.shapes;
 
-import com.antekk.tetris.gameview.TetrisGamePanel;
+import com.antekk.tetris.game.Shapes;
+import com.antekk.tetris.view.TetrisGamePanel;
 
 import java.awt.*;
 

@@ -1,19 +1,20 @@
-package com.antekk.tetris.shapes;
+package com.antekk.tetris.game.shapes;
 
-import com.antekk.tetris.gameview.TetrisGamePanel;
+import com.antekk.tetris.game.Shapes;
+import com.antekk.tetris.view.TetrisGamePanel;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-import static com.antekk.tetris.shapes.Shapes.getStationaryShapes;
-import static com.antekk.tetris.shapes.Shapes.shadow;
+import static com.antekk.tetris.game.Shapes.getStationaryShapes;
+import static com.antekk.tetris.game.Shapes.shadow;
 
 public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowShape {
     protected ArrayList<Point> collisionPoints;
     protected Color shapeColor;
     private boolean lockXPos = false;
 
-    protected abstract void setDefaultValues();
+    public abstract void setDefaultValues();
 
     public Shape() {
         setDefaultValues();
@@ -313,7 +314,7 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
     }
 
     @Override
-    protected Object clone() {
+    public Object clone() {
         Shape shape;
         try {
             shape = (Shape) super.clone();

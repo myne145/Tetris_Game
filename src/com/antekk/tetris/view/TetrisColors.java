@@ -1,4 +1,4 @@
-package com.antekk.tetris.gameview;
+package com.antekk.tetris.view;
 
 import java.awt.*;
 

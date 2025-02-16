@@ -1,7 +1,7 @@
-package com.antekk.tetris.gameview.displays.score;
+package com.antekk.tetris.view.displays.score;
 
-import com.antekk.tetris.gameview.displays.TetrisDisplay;
-import com.antekk.tetris.shapes.Shapes;
+import com.antekk.tetris.view.displays.TetrisDisplay;
+import com.antekk.tetris.game.Shapes;
 
 import java.awt.*;
 

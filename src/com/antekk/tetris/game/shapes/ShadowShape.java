@@ -1,4 +1,4 @@
-package com.antekk.tetris.shapes;
+package com.antekk.tetris.game.shapes;
 
 import java.awt.*;
 

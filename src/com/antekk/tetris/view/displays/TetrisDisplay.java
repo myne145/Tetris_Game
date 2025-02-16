@@ -1,11 +1,11 @@
-package com.antekk.tetris.gameview.displays;
+package com.antekk.tetris.view.displays;
 
-import com.antekk.tetris.gameview.TetrisColors;
-import com.antekk.tetris.shapes.Shapes;
+import com.antekk.tetris.view.TetrisColors;
+import com.antekk.tetris.game.Shapes;
 
 import java.awt.*;
 
-import static com.antekk.tetris.shapes.Shapes.getBlockSizePx;
+import static com.antekk.tetris.game.Shapes.getBlockSizePx;
 
 public abstract class TetrisDisplay {
     protected final int x;

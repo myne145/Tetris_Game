@@ -1,9 +1,9 @@
-package com.antekk.tetris.gameview.displays.shapes;
+package com.antekk.tetris.view.displays.shapes;
 
 import java.awt.*;
-import com.antekk.tetris.shapes.Shape;
-import com.antekk.tetris.shapes.Shapes;
-import static com.antekk.tetris.gameview.TetrisGamePanel.*;
+import com.antekk.tetris.game.shapes.Shape;
+import com.antekk.tetris.game.Shapes;
+import static com.antekk.tetris.view.TetrisGamePanel.*;
 
 public class NextShapeDisplay extends TetrisShapeDisplay {
     public NextShapeDisplay() {

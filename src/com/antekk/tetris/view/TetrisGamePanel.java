@@ -1,20 +1,20 @@
-package com.antekk.tetris.gameview;
+package com.antekk.tetris.view;
 
-import com.antekk.tetris.gameview.displays.score.LinesClearedDisplay;
-import com.antekk.tetris.gameview.displays.score.ScoreDisplay;
-import com.antekk.tetris.gameview.displays.shapes.HeldShapeDisplay;
-import com.antekk.tetris.gameview.displays.shapes.NextShapeDisplay;
-import com.antekk.tetris.shapes.Shape;
-import com.antekk.tetris.shapes.Shapes;
+import com.antekk.tetris.view.displays.score.LinesClearedDisplay;
+import com.antekk.tetris.view.displays.score.ScoreDisplay;
+import com.antekk.tetris.view.displays.shapes.HeldShapeDisplay;
+import com.antekk.tetris.view.displays.shapes.NextShapeDisplay;
+import com.antekk.tetris.game.shapes.Shape;
+import com.antekk.tetris.game.Shapes;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import static com.antekk.tetris.shapes.Shapes.*;
-import static com.antekk.tetris.shapes.Shapes.getCurrentShape;
-import static com.antekk.tetris.shapes.Shapes.updateCurrentShape;
+import static com.antekk.tetris.game.Shapes.*;
+import static com.antekk.tetris.game.Shapes.getCurrentShape;
+import static com.antekk.tetris.game.Shapes.updateCurrentShape;
 
 public class TetrisGamePanel extends JPanel implements KeyListener {
     public static final int LEFT = 8 * getBlockSizePx();

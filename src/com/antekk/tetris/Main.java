@@ -1,6 +1,6 @@
 package com.antekk.tetris;
 
-import com.antekk.tetris.gameview.GameWindow;
+import com.antekk.tetris.view.GameWindow;
 
 import javax.swing.*;
 

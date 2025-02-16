@@ -1,7 +1,7 @@
-package com.antekk.tetris.shapes.tetrominos;
+package com.antekk.tetris.game.tetrominos;
 
-import com.antekk.tetris.shapes.Shape;
-import com.antekk.tetris.shapes.Shapes;
+import com.antekk.tetris.game.shapes.Shape;
+import com.antekk.tetris.game.Shapes;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class SquareShape extends Shape {
 
     @Override
-    protected void setDefaultValues() {
+    public void setDefaultValues() {
         collisionPoints = new ArrayList<>(Arrays.asList(
                 new Point(4,0),
                 new Point(5,0),

@@ -1,24 +1,24 @@
-package com.antekk.tetris.shapes.tetrominos;
+package com.antekk.tetris.game.tetrominos;
 
-import com.antekk.tetris.shapes.Shape;
-import com.antekk.tetris.shapes.Shapes;
+import com.antekk.tetris.game.shapes.Shape;
+import com.antekk.tetris.game.Shapes;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
-public class TShape extends Shape {
-
+public class JShape extends Shape {
     @Override
-    protected void setDefaultValues() {
-        collisionPoints = new ArrayList<>(List.of(
-                new Point(4,1), //center
-                new Point(3, 1),
-                new Point(4, 0),
+    public void setDefaultValues() {
+        collisionPoints = new ArrayList<>(Arrays.asList(
+                new Point(4,1),
+                new Point(3,0),
+                new Point(3,1),
                 new Point(5, 1)
         ));
-        shapeColor = Color.MAGENTA;
+        shapeColor = Color.BLUE;
     }
+
 
     @Override
     public void setAsHeldShape() {

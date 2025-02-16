@@ -1,8 +1,8 @@
-package com.antekk.tetris.shapes.tetrominos;
+package com.antekk.tetris.game.tetrominos;
 
-import com.antekk.tetris.shapes.Shape;
-import com.antekk.tetris.shapes.Shapes;
-import com.antekk.tetris.gameview.TetrisGamePanel;
+import com.antekk.tetris.game.shapes.Shape;
+import com.antekk.tetris.game.Shapes;
+import com.antekk.tetris.view.TetrisGamePanel;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class LineShape extends Shape {
 //    private static String debugLine = "Rotation state: 0";
 
     @Override
-    protected void setDefaultValues() {
+    public void setDefaultValues() {
         collisionPoints = new ArrayList<>(Arrays.asList(
                 new Point(5,0),
                 new Point(4,0),
