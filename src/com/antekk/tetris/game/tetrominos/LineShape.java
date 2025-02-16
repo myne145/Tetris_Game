@@ -1,7 +1,6 @@
 package com.antekk.tetris.game.tetrominos;
 
 import com.antekk.tetris.game.shapes.Shape;
-import com.antekk.tetris.game.Shapes;
 import com.antekk.tetris.view.TetrisGamePanel;
 
 import java.awt.*;
@@ -12,39 +11,52 @@ public class LineShape extends Shape {
     private int rotationState = 0; //0,1,2,3
 //    private static String debugLine = "Rotation state: 0";
 
+
+    @Override
+    public ArrayList<Point> getDefaultCollisionPoints() {
+        return new ArrayList<>(Arrays.asList(
+                new Point(5,-1),
+                new Point(4,-1),
+                new Point(3,-1),
+                new Point(6,-1)
+        ));
+    }
+
+    @Override
+    public Color getDefaultColor() {
+        return Color.CYAN;
+    }
+
+    public int getDefaultRotationState() {
+        return 0;
+    }
+
     @Override
     public void setDefaultValues() {
-        collisionPoints = new ArrayList<>(Arrays.asList(
-                new Point(5,0),
-                new Point(4,0),
-                new Point(3,0),
-                new Point(6,0)
-        ));
-
-        rotationState = 0;
-        shapeColor = Color.CYAN;
+        super.setDefaultValues();
+        rotationState = getDefaultRotationState();
     }
 
     @Override
     public void setAsHeldShape() {
         super.setAsHeldShape();
-        move(-Shapes.getBlockSizePx(), 2 * Shapes.getBlockSizePx());
+        move(-TetrisGamePanel.getBlockSizePx(), 2 * TetrisGamePanel.getBlockSizePx());
     }
 
     @Override
     public void setAsNextShape() {
         super.setAsNextShape();
-        move(17 * Shapes.getBlockSizePx(), 2 * Shapes.getBlockSizePx());
+        move(17 * TetrisGamePanel.getBlockSizePx(), 2 * TetrisGamePanel.getBlockSizePx());
     }
 
-    @Override
-    public void draw(Graphics g) {
-        super.draw(g);
-        g.setColor(Color.RED);
-        g.fillRect(TetrisGamePanel.LEFT + Shapes.getBlockSizePx() * (getCenterPoint().x) - 5, TetrisGamePanel.TOP + Shapes.getBlockSizePx() * (getCenterPoint().y) - 5, 10, 10);
-
-//        g.drawString(debugLine, 100, 500);
-    }
+//    @Override
+//    public void draw(Graphics g) {
+//        super.draw(g);
+//        g.setColor(Color.RED);
+//        g.fillRect(TetrisGamePanel.LEFT + Shapes.getBlockSizePx() * (getCenterPoint().x) - 5, TetrisGamePanel.TOP + Shapes.getBlockSizePx() * (getCenterPoint().y) - 5, 10, 10);
+//
+////        g.drawString(debugLine, 100, 500);
+//    }
 
     @Override
     public Point getCenterPoint() {

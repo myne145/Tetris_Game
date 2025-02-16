@@ -12,7 +12,7 @@ public enum ScoreValue {
         this.value = value;
     }
 
-    protected int getValue() {
+    int getValue() {
         return value;
     }
 

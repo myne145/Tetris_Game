@@ -15,10 +15,9 @@ public class Shapes {
     private static Shape heldShape;
     private static Shape currentShape;
     private static boolean wasHeldUsed = false;
-    public static Shape shadow;
+    private static Shape shadow;
     private static final TetrisPlayer currentPlayer = new TetrisPlayer();
-    
-    
+
     public static Shape getRandomizedShape() {
         if(shapesList.size() == 1 || shapesList.isEmpty()) {
             //filling the array
@@ -131,6 +130,21 @@ public class Shapes {
         currentPlayer.addNonMultipliedScore(ScoreValue.fromClearedLines(clearedLines));
     }
 
+    public static boolean isGameOver() {
+        if(getCurrentShape() == null)
+            return false;
+
+        if(!getCurrentShape().getDefaultCollisionPoints().equals(getCurrentShape().getCollisionPoints())) {
+            return false;
+        }
+
+        for(Point p : getCurrentShape().getCollisionPoints()) {
+            if(!getCurrentShape().getCollisionsForPoint(p).isEmpty())
+                return true;
+        }
+        return false;
+    }
+
     public static void swapHeldAndCurrentShapes() {
         currentShape = updateHeldShape(currentShape);
         shadow = (Shape) currentShape.clone();
@@ -183,5 +197,9 @@ public class Shapes {
 
     public static long getLinesCleared() {
         return getCurrentPlayer().linesCleared;
+    }
+
+    public static Shape getShadow() {
+        return shadow;
     }
 }

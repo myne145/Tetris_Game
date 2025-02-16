@@ -1,11 +1,11 @@
 package com.antekk.tetris.view.displays;
 
 import com.antekk.tetris.view.TetrisColors;
-import com.antekk.tetris.game.Shapes;
+import com.antekk.tetris.view.TetrisGamePanel;
 
 import java.awt.*;
 
-import static com.antekk.tetris.game.Shapes.getBlockSizePx;
+import static com.antekk.tetris.view.TetrisGamePanel.getBlockSizePx;
 
 public abstract class TetrisDisplay {
     protected final int x;
@@ -19,7 +19,7 @@ public abstract class TetrisDisplay {
         this.y = y;
         this.text = text;
 
-        textX = x + (int)(1.5 * Shapes.getBlockSizePx());
+        textX = x + (int)(1.5 * TetrisGamePanel.getBlockSizePx());
     }
 
     public void drawDisplay(Graphics g) {
@@ -37,7 +37,7 @@ public abstract class TetrisDisplay {
     }
 
     protected int getTitlePositionX() {
-        return x + (int)(1.5 * Shapes.getBlockSizePx());
+        return x + (int)(1.5 * TetrisGamePanel.getBlockSizePx());
     }
 
     protected int getWidthInBlocks() {

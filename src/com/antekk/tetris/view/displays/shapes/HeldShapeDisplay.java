@@ -1,11 +1,10 @@
 package com.antekk.tetris.view.displays.shapes;
 
-import com.antekk.tetris.game.Shapes;
-
 import java.awt.*;
 
+import static com.antekk.tetris.game.Shapes.getHeldShape;
 import static com.antekk.tetris.view.TetrisGamePanel.TOP;
-import static com.antekk.tetris.game.Shapes.getBlockSizePx;
+import static com.antekk.tetris.view.TetrisGamePanel.getBlockSizePx;
 
 public class HeldShapeDisplay extends TetrisShapeDisplay {
     public HeldShapeDisplay() {
@@ -14,7 +13,7 @@ public class HeldShapeDisplay extends TetrisShapeDisplay {
 
     @Override
     public void drawShape(Graphics g) {
-        if(Shapes.getHeldShape() != null)
-            Shapes.getHeldShape().drawAsHeldShape(g);
+        if(getHeldShape() != null)
+            getHeldShape().drawAsHeldShape(g);
     }
 }
