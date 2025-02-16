@@ -4,6 +4,7 @@ public class TetrisPlayer {
     public long score = 0;
     public long linesCleared = 0;
     public int level = 1;
+    public String name;
 
 
     public void addNonMultipliedScore(ScoreValue scoreValues) {
