@@ -1,6 +1,6 @@
 package com.antekk.tetris.shapes;
 
-import com.antekk.tetris.gameview.GamePanel;
+import com.antekk.tetris.gameview.TetrisGamePanel;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -46,10 +46,6 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
         while(moveVertically());
     }
 
-    public static float getSpeedBlocksPerSeconds() {
-        return 4f;
-    }
-
     public boolean moveDown() {
         return moveVertically();
     }
@@ -58,16 +54,16 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
         for(Point p : getCollisionPoints()) {
             //Fill
             g.setColor(this.getColor());
-            g.fillRect(GamePanel.LEFT + p.x * Shapes.getBlockSizePx(), GamePanel.TOP + p.y * Shapes.getBlockSizePx(), Shapes.getBlockSizePx(), Shapes.getBlockSizePx());
+            g.fillRect(TetrisGamePanel.LEFT + p.x * Shapes.getBlockSizePx(), TetrisGamePanel.TOP + p.y * Shapes.getBlockSizePx(), Shapes.getBlockSizePx(), Shapes.getBlockSizePx());
 
             //Border
             g.setColor(Color.BLACK);
-            g.drawRect(GamePanel.LEFT + p.x * Shapes.getBlockSizePx(), GamePanel.TOP + p.y * Shapes.getBlockSizePx(), Shapes.getBlockSizePx(), Shapes.getBlockSizePx());
+            g.drawRect(TetrisGamePanel.LEFT + p.x * Shapes.getBlockSizePx(), TetrisGamePanel.TOP + p.y * Shapes.getBlockSizePx(), Shapes.getBlockSizePx(), Shapes.getBlockSizePx());
 
 
 //            g.setColor(Color.BLACK);
 //            for(Point collidingPoint : getCollisionsForPoint(p)) {
-//                g.fillOval(GamePanel.LEFT + collidingPoint.x * Shapes.getBlockSizePx() - 8, GamePanel.TOP + collidingPoint.y * Shapes.getBlockSizePx() - 8, 16, 16);
+//                g.fillOval(TetrisGamePanel.LEFT + collidingPoint.x * Shapes.getBlockSizePx() - 8, TetrisGamePanel.TOP + collidingPoint.y * Shapes.getBlockSizePx() - 8, 16, 16);
 //            }
         }
     }
@@ -85,7 +81,7 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
         g.setColor(Color.BLACK);
         g.setStroke(ShadowShape.shadowShapeBorder);
         for(Point p : getCollisionPoints()) {
-            g.drawRect(GamePanel.LEFT + p.x * Shapes.getBlockSizePx(), GamePanel.TOP + p.y * Shapes.getBlockSizePx(), Shapes.getBlockSizePx(), Shapes.getBlockSizePx());
+            g.drawRect(TetrisGamePanel.LEFT + p.x * Shapes.getBlockSizePx(), TetrisGamePanel.TOP + p.y * Shapes.getBlockSizePx(), Shapes.getBlockSizePx(), Shapes.getBlockSizePx());
         }
         g.setStroke(ShadowShape.defaultBorder);
     }
@@ -102,12 +98,12 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
                 continue;
             }
 
-            if(p.x >= GamePanel.getBoardCols() && -(distAbs - GamePanel.getBoardCols() + 1) < wallKickDistanceX) {
-                wallKickDistanceX = -(distAbs - GamePanel.getBoardCols() + 1);
+            if(p.x >= TetrisGamePanel.getBoardCols() && -(distAbs - TetrisGamePanel.getBoardCols() + 1) < wallKickDistanceX) {
+                wallKickDistanceX = -(distAbs - TetrisGamePanel.getBoardCols() + 1);
             }
 
-            if(p.y >= GamePanel.getBoardRows() - 1 && GamePanel.getBoardRows() - 1 - p.y < wallKickDistanceY) {
-                wallKickDistanceY = GamePanel.getBoardRows() - 1 - p.y;
+            if(p.y >= TetrisGamePanel.getBoardRows() - 1 && TetrisGamePanel.getBoardRows() - 1 - p.y < wallKickDistanceY) {
+                wallKickDistanceY = TetrisGamePanel.getBoardRows() - 1 - p.y;
             }
         }
 
@@ -115,13 +111,21 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
 
         ArrayList<Point> collisions = getCollisionsForPoint(getCenterPoint());
         int maxDistanceX = 0;
+        int maxDistanceY = 0;
+
         int distanceX = 0;
+        int distanceY = 0;
 
         for(Point p : collisions) {
             distanceX = getCenterPoint().x - p.x;
+            distanceY = getCenterPoint().y - p.y;
 
             if(Math.abs(distanceX) > maxDistanceX) {
                 maxDistanceX = Math.abs(distanceX);
+            }
+
+            if(distanceY < maxDistanceY) {
+                maxDistanceY = distanceY;
             }
         }
 
@@ -133,7 +137,7 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
                 return false;
         }
 
-        move(maxDistanceX, 0);
+        move(maxDistanceX, maxDistanceY);
         return true;
     }
 
@@ -182,6 +186,11 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
                 continue;
 
             for (Point pointToCheck : shape.getCollisionPoints()) {
+//                if(p.x == pointToCheck.x && p.y - 1 == pointToCheck.y) {
+//                    System.out.println("Collision at " + pointToCheck.x + ", " + pointToCheck.y + " for " + p.x + ", " + p.y);
+//                    points.add(pointToCheck);
+//                    continue;
+//                }
                 if ((p.x + 1 == pointToCheck.x || p.x - 1 == pointToCheck.x) && p.y == pointToCheck.y) {
 //                    System.out.println("Collision at " + pointToCheck.x + ", " + pointToCheck.y + " for " + p.x + ", " + p.y);
                     points.add(pointToCheck);
@@ -193,10 +202,18 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
                     points.add(pointToCheck);
                 }
 
-//                if (p.x - 1 == pointToCheck.x && p.y == pointToCheck.y) {
-//                    points.add(pointToCheck);
-//                }
+                if (p.x - 1 == pointToCheck.x && p.y == pointToCheck.y) {
+                    points.add(pointToCheck);
+                }
             }
+        }
+        return points;
+    }
+
+    private ArrayList<Point> getCollisionsForShape() {
+        ArrayList<Point> points = new ArrayList<>();
+        for (Point p : getCollisionPoints()) {
+            points.addAll(getCollisionsForPoint(p));
         }
         return points;
     }
@@ -223,13 +240,14 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
 
     private boolean moveHorizontaly(int amount) {
         for(Point p : getCollisionPoints()) {
-            if((p.x == GamePanel.getBoardCols() - 1 && amount > 0) ||
+            if((p.x == TetrisGamePanel.getBoardCols() - 1 && amount > 0) ||
                     (p.x == 0 && amount < 0)) {
                 return false;
             }
         }
 
         if(!checkForCollisionsForShapeXAxis().isEmpty())
+//        if(!getCollisionsForShape().isEmpty())
             return false;
 
         move(amount, 0);
@@ -241,13 +259,14 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
 
     public boolean moveVertically() {
         for(Point p : getCollisionPoints()) {
-            if(p.y == GamePanel.getBoardRows() - 1) {
+            if(p.y == TetrisGamePanel.getBoardRows() - 1) {
                 return false;
             }
         }
 
         for(Shape shape : getStationaryShapes()) {
             if(checkForCollisionsForShapeYAxis(shape))
+//            if(!shape.getCollisionsForShape().isEmpty())
                 return false;
         }
 
@@ -272,7 +291,7 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
     }
 
     @Override
-    public void setHeld() {
+    public void setAsHeldShape() {
         multiplyPoints();
     }
 

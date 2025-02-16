@@ -21,8 +21,8 @@ public class TShape extends Shape {
     }
 
     @Override
-    public void setHeld() {
-        super.setHeld();
+    public void setAsHeldShape() {
+        super.setAsHeldShape();
         move(-Shapes.getBlockSizePx() / 2, Shapes.getBlockSizePx() * 2);
     }
 

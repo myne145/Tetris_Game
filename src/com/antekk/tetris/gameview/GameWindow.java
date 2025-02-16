@@ -7,7 +7,7 @@ public class GameWindow extends JFrame {
     public GameWindow() {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("Tetris");
-        GamePanel panel = new GamePanel();
+        TetrisGamePanel panel = new TetrisGamePanel();
         this.add(panel);
 
         Dimension prefferedSize = panel.getPreferredSize();

@@ -1,12 +1,10 @@
 package com.antekk.tetris.shapes;
 
-import com.antekk.tetris.gameview.GamePanel;
+import com.antekk.tetris.gameview.TetrisGamePanel;
 import com.antekk.tetris.shapes.tetrominos.*;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 public class Shapes {
     private static final ArrayList<Shape> shapesList = new ArrayList<>();
@@ -15,6 +13,8 @@ public class Shapes {
     private static Shape currentShape;
     private static boolean wasHeldUsed = false;
     public static Shape shadow;
+    public static long score = 0;
+    private static long linesCleared = 0;
 
     public static Shape getRandomizedShape() {
         if(shapesList.size() == 1 || shapesList.isEmpty()) {
@@ -58,7 +58,7 @@ public class Shapes {
         else
             returnValue = heldShape;
 
-        currentShape.setHeld();
+        currentShape.setAsHeldShape();
         heldShape = currentShape;
 
         returnValue.setDefaultValues();
@@ -69,7 +69,7 @@ public class Shapes {
     public static void clearFullLines() {
         int start = 0;
         int end = Integer.MAX_VALUE;
-        for(int currentYpos = 0; currentYpos < GamePanel.getBoardRows(); currentYpos++) {
+        for(int currentYpos = 0; currentYpos < TetrisGamePanel.getBoardRows(); currentYpos++) {
             boolean isLineFull = isLineFull(currentYpos);
             if(isLineFull && currentYpos > start) {
                 start = currentYpos;
@@ -94,7 +94,7 @@ public class Shapes {
             }
         }
 
-        return xPositions.size() == GamePanel.getBoardCols();
+        return xPositions.size() == TetrisGamePanel.getBoardCols();
     }
 
     private static void clearLineAt(int yStart, int yEnd) {
@@ -124,7 +124,7 @@ public class Shapes {
 
             }
         }
-
+        linesCleared += distanceToMoveLinesDownBy;
     }
 
     public static void swapHeldAndCurrentShapes() {
@@ -167,5 +167,13 @@ public class Shapes {
 
     public static int getBlockSizePx() {
         return 40;
+    }
+
+    public static float getSpeedBlocksPerSeconds() {
+        return 4f;
+    }
+
+    public static long getLinesCleared() {
+        return linesCleared;
     }
 }

@@ -21,8 +21,8 @@ public class SquareShape extends Shape {
     }
 
     @Override
-    public void setHeld() {
-        super.setHeld();
+    public void setAsHeldShape() {
+        super.setAsHeldShape();
         move(-Shapes.getBlockSizePx(), Shapes.getBlockSizePx() * 2);
     }
 

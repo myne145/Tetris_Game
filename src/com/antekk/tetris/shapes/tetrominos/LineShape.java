@@ -2,7 +2,7 @@ package com.antekk.tetris.shapes.tetrominos;
 
 import com.antekk.tetris.shapes.Shape;
 import com.antekk.tetris.shapes.Shapes;
-import com.antekk.tetris.gameview.GamePanel;
+import com.antekk.tetris.gameview.TetrisGamePanel;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 public class LineShape extends Shape {
     private int rotationState = 0; //0,1,2,3
-    private static String debugLine = "Rotation state: 0";
+//    private static String debugLine = "Rotation state: 0";
 
     @Override
     protected void setDefaultValues() {
@@ -26,8 +26,8 @@ public class LineShape extends Shape {
     }
 
     @Override
-    public void setHeld() {
-        super.setHeld();
+    public void setAsHeldShape() {
+        super.setAsHeldShape();
         move(-Shapes.getBlockSizePx(), 2 * Shapes.getBlockSizePx());
     }
 
@@ -41,9 +41,9 @@ public class LineShape extends Shape {
     public void draw(Graphics g) {
         super.draw(g);
         g.setColor(Color.RED);
-        g.fillRect(GamePanel.LEFT + Shapes.getBlockSizePx() * (getCenterPoint().x) - 5, GamePanel.TOP + Shapes.getBlockSizePx() * (getCenterPoint().y) - 5, 10, 10);
+        g.fillRect(TetrisGamePanel.LEFT + Shapes.getBlockSizePx() * (getCenterPoint().x) - 5, TetrisGamePanel.TOP + Shapes.getBlockSizePx() * (getCenterPoint().y) - 5, 10, 10);
 
-        g.drawString(debugLine, 100, 500);
+//        g.drawString(debugLine, 100, 500);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class LineShape extends Shape {
         else if(rotationState == 4)
             rotationState = 0;
 
-        debugLine = "Rotation state: " + rotationState;
+//        debugLine = "Rotation state: " + rotationState;
 
 
 
