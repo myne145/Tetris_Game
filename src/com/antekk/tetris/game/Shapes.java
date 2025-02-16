@@ -130,21 +130,6 @@ public class Shapes {
         currentPlayer.addNonMultipliedScore(ScoreValue.fromClearedLines(clearedLines));
     }
 
-    public static boolean isGameOver() {
-        if(getCurrentShape() == null)
-            return false;
-
-        if(!getCurrentShape().getDefaultCollisionPoints().equals(getCurrentShape().getCollisionPoints())) {
-            return false;
-        }
-
-        for(Point p : getCurrentShape().getCollisionPoints()) {
-            if(!getCurrentShape().getCollisionsForPoint(p).isEmpty())
-                return true;
-        }
-        return false;
-    }
-
     public static void swapHeldAndCurrentShapes() {
         currentShape = updateHeldShape(currentShape);
         shadow = (Shape) currentShape.clone();
@@ -188,7 +173,7 @@ public class Shapes {
     }
 
     public static float getSpeedBlocksPerSeconds() {
-        return 4f;
+        return 0.1236f;
     }
 
     public static TetrisPlayer getCurrentPlayer() {

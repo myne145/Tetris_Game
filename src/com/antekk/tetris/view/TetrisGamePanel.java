@@ -1,5 +1,6 @@
 package com.antekk.tetris.view;
 
+import com.antekk.tetris.game.loop.GameLoop;
 import com.antekk.tetris.view.displays.score.LinesClearedDisplay;
 import com.antekk.tetris.view.displays.score.ScoreDisplay;
 import com.antekk.tetris.view.displays.shapes.HeldShapeDisplay;
@@ -28,29 +29,6 @@ public class TetrisGamePanel extends JPanel implements KeyListener {
 
     public static int getBlockSizePx() {
         return 40;
-    }
-
-    private void gameLoop() {
-        //if the shape is already in the bottom
-        if(!getCurrentShape().moveDown()) {
-            getStationaryShapes().add(getCurrentShape());
-            clearFullLines();
-            updateCurrentShape();
-            unlockHeld();
-        }
-
-        repaint();
-
-        if(isGameOver()) {
-            return;
-        }
-
-        try {
-            Thread.sleep((long) (1 / getSpeedBlocksPerSeconds() * 1000));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        gameLoop();
     }
 
     @Override
@@ -102,8 +80,8 @@ public class TetrisGamePanel extends JPanel implements KeyListener {
         setBackground(TetrisColors.backgroundColor);
 
         updateCurrentShape();
-        Thread gameThread = getGameThread();
-        gameThread.start();
+        GameLoop loop = new GameLoop(this);
+        loop.start();
     }
 
     @Override
@@ -127,9 +105,5 @@ public class TetrisGamePanel extends JPanel implements KeyListener {
 
     public static int getBoardCols() {
         return 10;
-    }
-
-    private Thread getGameThread() {
-        return new Thread(this::gameLoop);
     }
 }
