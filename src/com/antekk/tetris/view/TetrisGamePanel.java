@@ -2,6 +2,7 @@ package com.antekk.tetris.view;
 
 import com.antekk.tetris.game.Shapes;
 import com.antekk.tetris.game.loop.GameLoop;
+import com.antekk.tetris.game.loop.GameState;
 import com.antekk.tetris.view.displays.score.LinesClearedDisplay;
 import com.antekk.tetris.view.displays.score.ScoreDisplay;
 import com.antekk.tetris.view.displays.shapes.HeldShapeDisplay;
@@ -27,32 +28,40 @@ public class TetrisGamePanel extends JPanel {
     private final ScoreDisplay scorePanel = new ScoreDisplay();
     private final LinesClearedDisplay linesClearedDisplay = new LinesClearedDisplay();
 
-    public static int getBlockSizePx() {
-        return 40;
-    }
+    private final GameLoop loop = new GameLoop(this);
 
     @Override
-    protected synchronized void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    protected synchronized void paintComponent(Graphics g1) {
+        super.paintComponent(g1);
+
+        Graphics2D g = (Graphics2D)  g1;
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+
+
+        if(loop.getGameState() == GameState.PAUSED) {
+            drawPauseScreen(g1);
+            return;
+        }
 
         //Main game area
-        g.setColor(TetrisColors.foregroundColor); //border
-        g.drawRoundRect(LEFT, TOP, RIGHT, BOTTOM,8,8);
-        g.setColor(TetrisColors.backgroundColor); //fill
-        g.fillRoundRect(LEFT+1, TOP+1, RIGHT-1, BOTTOM-1,8,8);
+        g1.setColor(TetrisColors.foregroundColor); //border
+        g1.drawRoundRect(LEFT, TOP, RIGHT, BOTTOM,8,8);
+        g1.setColor(TetrisColors.backgroundColor); //fill
+        g1.fillRoundRect(LEFT+1, TOP+1, RIGHT-1, BOTTOM-1,8,8);
 
-        heldShapeDisplay.drawDisplay(g);
-        nextShapeDisplay.drawDisplay(g);
-        scorePanel.drawDisplay(g);
-        linesClearedDisplay.drawDisplay(g);
+        heldShapeDisplay.drawDisplay(g1);
+        nextShapeDisplay.drawDisplay(g1);
+        scorePanel.drawDisplay(g1);
+        linesClearedDisplay.drawDisplay(g1);
 
         if(getShadow() != null)
-            getShadow().drawAsShadow((Graphics2D) g);
+            getShadow().drawAsShadow((Graphics2D) g1);
 
         //Shapes
-        getCurrentShape().draw(g);
+        getCurrentShape().draw(g1);
         for(Shape shape : getStationaryShapes()) { //TODO ConcurrentModificationException here
-            shape.draw(g);
+            shape.draw(g1);
         }
     }
 
@@ -62,14 +71,33 @@ public class TetrisGamePanel extends JPanel {
                 4 * Shapes.getBlockSizePx() + 2, 4 * Shapes.getBlockSizePx() + 2);
     }
 
+    private void drawPauseScreen(Graphics g) {
+        g.setColor(TetrisColors.backgroundColor);
+        g.fillRect(0,0,getWidth(),getHeight());
+
+        g.setColor(TetrisColors.foregroundColor);
+        g.setFont(g.getFont().deriveFont((float) Shapes.getBlockSizePx()));
+        g.drawString("Game paused", getBoardCols() / 2 * Shapes.getBlockSizePx(),
+                getBoardRows() / 4 * Shapes.getBlockSizePx());
+
+        g.drawString("Score: " + getCurrentPlayer().score, getBoardCols() / 2 * Shapes.getBlockSizePx(),
+                (int) ((getBoardRows() / 4 + 5.5) * Shapes.getBlockSizePx()));
+
+        g.drawString("Lines cleared: " + getCurrentPlayer().linesCleared, getBoardCols() / 2 * Shapes.getBlockSizePx(),
+                (int) ((getBoardRows() / 4 + 6.8) * Shapes.getBlockSizePx()));
+
+        g.drawString("Level: " + getCurrentPlayer().level, getBoardCols() / 2 * Shapes.getBlockSizePx(),
+                (int) ((getBoardRows() / 4 + 8.1) * Shapes.getBlockSizePx()));
+
+    }
+
     protected TetrisGamePanel() {
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = getActionMap();
         setupKeyBindings(inputMap, actionMap, this);
 
-        setBackground(TetrisColors.backgroundColor);
         updateCurrentShape();
-        GameLoop loop = new GameLoop(this);
+
         loop.start();
     }
 
@@ -84,5 +112,13 @@ public class TetrisGamePanel extends JPanel {
 
     public static int getBoardCols() {
         return 10;
+    }
+
+    public static int getBlockSizePx() {
+        return 40;
+    }
+
+    public GameLoop getGameLoop() {
+        return loop;
     }
 }

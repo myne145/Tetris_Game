@@ -40,14 +40,18 @@ public class GameLoop extends Thread {
                 currentPanel.paintImmediately(0, 0, currentPanel.getWidth(), currentPanel.getHeight());
             }
 
-            gameState = getGameState();
+            gameState = updateGameState();
 
             lastFrame = (int) System.currentTimeMillis();
             targetTime = lastFrame + timeBetweenFramesMillis;
         }
     }
 
-    private static GameState getGameState() { //TODO
+    private GameState updateGameState() {
+        if(gameState == GameState.PAUSED) {
+            return GameState.PAUSED;
+        }
+
         if(getCurrentShape() == null)
             return GameState.RUNNING;
 
@@ -62,6 +66,17 @@ public class GameLoop extends Thread {
         return GameState.RUNNING;
     }
 
+    public void pauseAndUnpauseGame() {
+        if(gameState == GameState.LOST)
+            return;
+
+        if(gameState == GameState.PAUSED) {
+            gameState = GameState.RUNNING;
+        } else {
+            gameState = GameState.PAUSED;
+        }
+    }
+
     @Override
     public void run() {
         gameState = GameState.RUNNING;
@@ -70,5 +85,9 @@ public class GameLoop extends Thread {
 
     public GameLoop(TetrisGamePanel panel) {
         this.currentPanel = panel;
+    }
+
+    public GameState getGameState() {
+        return gameState;
     }
 }

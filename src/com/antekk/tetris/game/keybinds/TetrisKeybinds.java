@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import static com.antekk.tetris.game.Shapes.getCurrentShape;
 
 public class TetrisKeybinds {
+    private static boolean lockPauseKey = false;
 
     public static void setupKeyBindings(InputMap inputMap, ActionMap actionMap, TetrisGamePanel gamePanel) {
         if (gamePanel == null || inputMap == null || actionMap == null) {
@@ -21,31 +22,35 @@ public class TetrisKeybinds {
 
         new TetrisKeybind("MOVE_RIGHT", KeyEvent.VK_RIGHT,
                 () -> getCurrentShape().moveRight()
-        ).bindKey();
+        ).bindKeyPressed();
 
         new TetrisKeybind("MOVE_LEFT", KeyEvent.VK_LEFT,
                 () -> getCurrentShape().moveLeft()
-        ).bindKey();
+        ).bindKeyPressed();
 
         new TetrisKeybind("MOVE_DOWN", KeyEvent.VK_DOWN,
                 () -> getCurrentShape().moveDown()
-        ).bindKey();
+        ).bindKeyPressed();
 
         new TetrisKeybind("HARD_DROP", KeyEvent.VK_SPACE,
                 () -> getCurrentShape().hardDrop()
-        ).bindKey();
+        ).bindKeyPressed();
 
         new TetrisKeybind("ROTATE_RIGHT", KeyEvent.VK_UP,
                 () -> getCurrentShape().rotateRight()
-        ).bindKey();
+        ).bindKeyPressed();
 
         new TetrisKeybind("ROTATE_LEFT", KeyEvent.VK_Z,
                 () -> getCurrentShape().rotateLeft()
-        ).bindKey();
+        ).bindKeyPressed();
 
         new TetrisKeybind("HELD_SHAPE", KeyEvent.VK_C,
                 Shapes::swapHeldAndCurrentShapes
-        ).bindKey();
+        ).bindKeyPressed();
+
+        new TetrisKeybind("PAUSE_GAME_PRESSED", KeyEvent.VK_ESCAPE,
+            () -> gamePanel.getGameLoop().pauseAndUnpauseGame()
+        ).bindKeyPressed();
     }
 }
 

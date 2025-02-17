@@ -10,8 +10,17 @@ record TetrisKeybind(String name, int keyCode, Runnable action) {
     static InputMap inputMap;
     static ActionMap actionMap;
 
-    protected void bindKey() {
-        TetrisKeybind.inputMap.put(KeyStroke.getKeyStroke(keyCode(), 0), name());
+    void bindKeyPressed() {
+        bind(0, false);
+    }
+
+    void bindKeyReleased() {
+        bind(0, true);
+    }
+
+
+    private void bind(int modifiers, boolean onKeyRelease) {
+        TetrisKeybind.inputMap.put(KeyStroke.getKeyStroke(keyCode(), modifiers, onKeyRelease), name());
         TetrisKeybind.actionMap.put(name(), new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
