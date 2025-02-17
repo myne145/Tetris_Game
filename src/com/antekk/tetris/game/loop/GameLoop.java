@@ -23,7 +23,7 @@ public class GameLoop extends Thread {
                 continue;
 
 
-            linesToMoveBlock += Shapes.getSpeedBlocksPerSeconds();
+            linesToMoveBlock += Shapes.getFramesForBlockToMoveDown();
 
             boolean canMoveDown = true;
             while (linesToMoveBlock >= 1) {
@@ -35,6 +35,7 @@ public class GameLoop extends Thread {
             if(!canMoveDown) {
                 getStationaryShapes().add(getCurrentShape());
                 clearFullLines();
+                updateGameLevel();
                 updateCurrentShape();
                 unlockHeld();
                 currentPanel.paintImmediately(0, 0, currentPanel.getWidth(), currentPanel.getHeight());

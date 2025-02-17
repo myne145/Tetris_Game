@@ -63,6 +63,9 @@ public class TetrisGamePanel extends JPanel {
         for(Shape shape : getStationaryShapes()) { //TODO ConcurrentModificationException here
             shape.draw(g1);
         }
+
+
+        g.drawString("Level: " + getCurrentPlayer().level, 100, 400);
     }
 
     public void repaintCurrentShape() {
@@ -92,10 +95,35 @@ public class TetrisGamePanel extends JPanel {
     }
 
     protected TetrisGamePanel() {
+        setLayout(new BorderLayout());
+        JButton newGame = new JButton("New game");
+        JButton pauseGame = new JButton("Pause game");
+
+        JPanel toolbar = new JPanel();
+        BoxLayout layout = new BoxLayout(toolbar, BoxLayout.X_AXIS);
+        toolbar.setLayout(layout);
+
+        toolbar.add(newGame);
+        toolbar.add(Box.createRigidArea(new Dimension(Shapes.getBlockSizePx(), 3)));
+        toolbar.add(pauseGame);
+
+
+        add(toolbar, BorderLayout.PAGE_START);
+
+        newGame.setFocusable(false);
+        pauseGame.setFocusable(false);
+
+        pauseGame.addActionListener(e -> {
+            loop.pauseAndUnpauseGame();
+            repaint();
+        });
+
+
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = getActionMap();
         setupKeyBindings(inputMap, actionMap, this);
 
+        updateGameLevel();
         updateCurrentShape();
 
         loop.start();

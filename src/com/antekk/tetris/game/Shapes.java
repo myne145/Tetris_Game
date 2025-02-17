@@ -8,6 +8,7 @@ import com.antekk.tetris.game.tetrominos.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Shapes {
     private static final ArrayList<Shape> shapesList = new ArrayList<>();
@@ -18,6 +19,13 @@ public class Shapes {
     private static Shape shadow;
     private static final TetrisPlayer currentPlayer = new TetrisPlayer();
     private static int comboCounter = -1;
+    private static int targetLinesForNextLevel = 0;
+    private static int currentLinesForNextLevel = 0;
+
+    private static final ArrayList<Double> speedValues = new ArrayList<>(
+           Arrays.asList(0.01667, 0.021017, 0.026977, 0.035256, 0.04693, 0.06361, 0.0879, 0.1236,
+                    0.1775, 0.2598, 0.388, 0.59, 0.92, 1.46, 2.36, 3.91, 6.61, 11.43, 20.23, 36.6)
+    );
 
     public static Shape getRandomizedShape() {
         if(shapesList.size() == 1 || shapesList.isEmpty()) {
@@ -133,7 +141,18 @@ public class Shapes {
             }
         }
         currentPlayer.linesCleared += clearedLines;
+        currentLinesForNextLevel += clearedLines;
         currentPlayer.addNonMultipliedScore(ScoreValue.fromClearedLines(clearedLines));
+    }
+
+    public static void updateGameLevel() {
+        if(currentLinesForNextLevel < targetLinesForNextLevel)
+            return;
+
+
+        getCurrentPlayer().level++;
+        targetLinesForNextLevel = getCurrentPlayer().level * 5;
+        currentLinesForNextLevel = 0;
     }
 
     public static void swapHeldAndCurrentShapes() {
@@ -178,8 +197,8 @@ public class Shapes {
         return 40;
     }
 
-    public static float getSpeedBlocksPerSeconds() {
-        return 0.08236f;
+    public static float getFramesForBlockToMoveDown() {
+        return speedValues.get(Math.min(getCurrentPlayer().level - 1, speedValues.size())).floatValue();
     }
 
     public static TetrisPlayer getCurrentPlayer() {
