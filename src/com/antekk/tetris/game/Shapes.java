@@ -89,7 +89,7 @@ public class Shapes {
 
         comboCounter++;
         clearLineAt(start, end);
-        getCurrentPlayer().addNonMultipliedScore(ScoreValue.COMBO.multiplyBy(comboCounter));
+        getCurrentPlayer().addNonMultipliedScore(ScoreValue.COMBO.getValue() * comboCounter);
     }
 
     private static boolean isLineFull(int y) {

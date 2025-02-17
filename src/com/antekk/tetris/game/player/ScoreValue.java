@@ -13,19 +13,11 @@ public enum ScoreValue {
         this.value = value;
     }
 
-    int getValue() {
+    public int getValue() {
         return value;
     }
 
     public static ScoreValue fromClearedLines(int linesCleared) {
         return ScoreValue.values()[linesCleared - 1];
     }
-
-    public ScoreValue multiplyBy(int value) {
-        this.value *= value;
-        return this;
-    }
-
-//    public ScoreValue
-
 }

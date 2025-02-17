@@ -9,4 +9,8 @@ public class TetrisPlayer {
     public void addNonMultipliedScore(ScoreValue scoreValues) {
         score += (long) scoreValues.getValue() * level;
     }
+
+    public void addNonMultipliedScore(int value) {
+        score += (long) value * level;
+    }
 }
