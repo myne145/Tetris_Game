@@ -29,6 +29,7 @@ public class GameLoop extends Thread {
             while (linesToMoveBlock >= 1) {
                 canMoveDown = Shapes.getCurrentShape().moveDown();
                 linesToMoveBlock--;
+                currentPanel.repaintCurrentShape();
             }
 
             if(!canMoveDown) {
@@ -36,10 +37,8 @@ public class GameLoop extends Thread {
                 clearFullLines();
                 updateCurrentShape();
                 unlockHeld();
+                currentPanel.paintImmediately(0, 0, currentPanel.getWidth(), currentPanel.getHeight());
             }
-
-
-            currentPanel.paintImmediately(0, 0, currentPanel.getWidth(),currentPanel.getHeight());
 
             gameState = getGameState();
 

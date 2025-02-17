@@ -1,5 +1,6 @@
 package com.antekk.tetris.view;
 
+import com.antekk.tetris.game.Shapes;
 import com.antekk.tetris.game.loop.GameLoop;
 import com.antekk.tetris.view.displays.score.LinesClearedDisplay;
 import com.antekk.tetris.view.displays.score.ScoreDisplay;
@@ -9,13 +10,12 @@ import com.antekk.tetris.game.shapes.Shape;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import static com.antekk.tetris.game.Shapes.*;
 import static com.antekk.tetris.game.Shapes.getShadow;
+import static com.antekk.tetris.game.keybinds.TetrisKeybinds.setupKeyBindings;
 
-public class TetrisGamePanel extends JPanel implements KeyListener {
+public class TetrisGamePanel extends JPanel {
     public static final int LEFT = 8 * getBlockSizePx();
     public static final int TOP = getBlockSizePx();
     public static final int RIGHT = getBoardCols() * getBlockSizePx();
@@ -56,42 +56,21 @@ public class TetrisGamePanel extends JPanel implements KeyListener {
         }
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_RIGHT -> getCurrentShape().moveRight();
-            case KeyEvent.VK_LEFT -> getCurrentShape().moveLeft();
-            case KeyEvent.VK_DOWN -> getCurrentShape().moveDown();
-            case KeyEvent.VK_SPACE -> getCurrentShape().hardDrop();
-            case KeyEvent.VK_UP -> getCurrentShape().rotateRight();
-            case KeyEvent.VK_Z -> getCurrentShape().rotateLeft();
-            case KeyEvent.VK_C -> swapHeldAndCurrentShapes();
-            default -> {
-                return;
-            }
-        }
-        repaint();
+    public void repaintCurrentShape() {
+        paintImmediately(LEFT + (getCurrentShape().getCenterPoint().x - 2) * Shapes.getBlockSizePx() - 1,
+                TOP + (getCurrentShape().getCenterPoint().y - 2) * Shapes.getBlockSizePx() - 1,
+                4 * Shapes.getBlockSizePx() + 2, 4 * Shapes.getBlockSizePx() + 2);
     }
 
     protected TetrisGamePanel() {
-        this.setFocusable(true);
-        this.requestFocus();
-        this.addKeyListener(this);
-        setBackground(TetrisColors.backgroundColor);
+        InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = getActionMap();
+        setupKeyBindings(inputMap, actionMap, this);
 
+        setBackground(TetrisColors.backgroundColor);
         updateCurrentShape();
         GameLoop loop = new GameLoop(this);
         loop.start();
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
     }
 
     @Override
