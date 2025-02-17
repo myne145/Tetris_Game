@@ -17,6 +17,7 @@ public class Shapes {
     private static boolean wasHeldUsed = false;
     private static Shape shadow;
     private static final TetrisPlayer currentPlayer = new TetrisPlayer();
+    private static int comboCounter = -1;
 
     public static Shape getRandomizedShape() {
         if(shapesList.size() == 1 || shapesList.isEmpty()) {
@@ -81,9 +82,14 @@ public class Shapes {
             }
         }
 
-        if(end == Integer.MAX_VALUE)
+        if(end == Integer.MAX_VALUE) {
+            comboCounter = -1;
             return;
+        }
+
+        comboCounter++;
         clearLineAt(start, end);
+        getCurrentPlayer().addNonMultipliedScore(ScoreValue.COMBO.multiplyBy(comboCounter));
     }
 
     private static boolean isLineFull(int y) {
@@ -173,7 +179,7 @@ public class Shapes {
     }
 
     public static float getSpeedBlocksPerSeconds() {
-        return 0.1236f;
+        return 0.08236f;
     }
 
     public static TetrisPlayer getCurrentPlayer() {

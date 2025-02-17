@@ -4,10 +4,11 @@ public enum ScoreValue {
     SIGLE(100),
     DOUBLE(300),
     TRIPLE(500),
-    TETRIS(800);
+    TETRIS(800),
+    COMBO(50);
 
 
-    private final int value;
+    private int value;
     ScoreValue(int value) {
         this.value = value;
     }
@@ -19,5 +20,12 @@ public enum ScoreValue {
     public static ScoreValue fromClearedLines(int linesCleared) {
         return ScoreValue.values()[linesCleared - 1];
     }
+
+    public ScoreValue multiplyBy(int value) {
+        this.value *= value;
+        return this;
+    }
+
+//    public ScoreValue
 
 }
