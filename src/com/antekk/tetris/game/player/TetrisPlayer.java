@@ -4,7 +4,7 @@ public class TetrisPlayer {
     public long score = 0;
     public long linesCleared = 0;
     public int level = 0;
-
+    public String name;
 
     public void addNonMultipliedScore(ScoreValue scoreValues) {
         score += (long) scoreValues.getValue() * level;
@@ -12,5 +12,16 @@ public class TetrisPlayer {
 
     public void addNonMultipliedScore(int value) {
         score += (long) value * level;
+    }
+
+    public TetrisPlayer() {
+
+    }
+
+    public TetrisPlayer(long score, long linesCleared, int level, String name) {
+        this.score = score;
+        this.linesCleared = linesCleared;
+        this.level = level;
+        this.name = name;
     }
 }
