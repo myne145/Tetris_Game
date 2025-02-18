@@ -13,6 +13,7 @@ public class GameLoop extends Thread {
     private final TetrisGamePanel currentPanel;
     private float linesToMoveBlock = 0;
     private GameState gameState;
+    private int framesSinceTetrominoLanded = 0;
 
     private final int timeBetweenFramesMillis = 1000 / 60;
     private int lastFrame = (int) System.currentTimeMillis();
@@ -24,6 +25,10 @@ public class GameLoop extends Thread {
             if(currentTime < targetTime || gameState == GameState.PAUSED)
                 continue;
 
+            //30 frames of lock delay
+            if(getCurrentShape().hasLanded) {
+                framesSinceTetrominoLanded++;
+            }
 
             linesToMoveBlock += Shapes.getFramesForBlockToMoveDown();
 
@@ -34,7 +39,18 @@ public class GameLoop extends Thread {
                 currentPanel.repaintCurrentShape();
             }
 
-            if(!canMoveDown) {
+            if(!canMoveDown)
+                getCurrentShape().hasLanded = true;
+
+            if((getCurrentShape().hasLanded && framesSinceTetrominoLanded >= 30) ||
+                    getCurrentShape().wasHardDropUsed()) {
+
+                //so that the shape doesnt end up in the air (terrible solution imo, TODO: verify that i guess)
+                while(Shapes.getCurrentShape().moveDown());
+
+                framesSinceTetrominoLanded = 0;
+                getCurrentShape().hasLanded = false;
+
                 getStationaryShapes().add(getCurrentShape());
                 clearFullLines();
                 updateGameLevel();

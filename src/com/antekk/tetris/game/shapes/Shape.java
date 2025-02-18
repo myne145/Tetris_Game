@@ -12,7 +12,8 @@ import static com.antekk.tetris.game.Shapes.getStationaryShapes;
 public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowShape {
     protected ArrayList<Point> collisionPoints;
     protected Color shapeColor;
-    private boolean lockXPos = false;
+    private boolean wasHardDropUsed = false;
+    public boolean hasLanded = false;
 
     public void setDefaultValues() {
         collisionPoints = getDefaultCollisionPoints();
@@ -50,7 +51,7 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
     }
 
     public void hardDrop() {
-        lockXPos = true;
+        wasHardDropUsed = true;
         while(moveVertically());
     }
 
@@ -150,6 +151,7 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
             if(p.x + maxDistanceX < 0)
                 return false;
         }
+        //TODO: max one vertical wall kick when shape lands
 
         move(maxDistanceX, maxDistanceY);
         return true;
@@ -289,7 +291,7 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
     }
 
     protected void move(int dx, int dy) {
-        if(lockXPos)
+        if(wasHardDropUsed)
             dx = 0;
         for(Point p : getCollisionPoints()) {
             p.translate(dx, dy);
@@ -324,6 +326,10 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
 
     public Point getCenterPoint() {
         return getCollisionPoints().getFirst();
+    }
+
+    public boolean wasHardDropUsed() {
+        return wasHardDropUsed;
     }
 
     @Override
