@@ -3,6 +3,7 @@ package com.antekk.tetris.view;
 import com.antekk.tetris.game.Shapes;
 import com.antekk.tetris.game.loop.GameLoop;
 import com.antekk.tetris.game.loop.GameState;
+import com.antekk.tetris.view.displays.score.LevelDisplay;
 import com.antekk.tetris.view.displays.score.LinesClearedDisplay;
 import com.antekk.tetris.view.displays.score.ScoreDisplay;
 import com.antekk.tetris.view.displays.shapes.HeldShapeDisplay;
@@ -27,6 +28,7 @@ public class TetrisGamePanel extends JPanel {
 
     private final ScoreDisplay scorePanel = new ScoreDisplay();
     private final LinesClearedDisplay linesClearedDisplay = new LinesClearedDisplay();
+    private final LevelDisplay levelDisplay = new LevelDisplay();
 
     private final GameLoop loop = new GameLoop(this);
 
@@ -54,6 +56,7 @@ public class TetrisGamePanel extends JPanel {
         nextShapeDisplay.drawDisplay(g1);
         scorePanel.drawDisplay(g1);
         linesClearedDisplay.drawDisplay(g1);
+        levelDisplay.drawDisplay(g1);
 
         if(getShadow() != null)
             getShadow().drawAsShadow((Graphics2D) g1);
@@ -63,9 +66,6 @@ public class TetrisGamePanel extends JPanel {
         for(Shape shape : getStationaryShapes()) { //TODO ConcurrentModificationException here
             shape.draw(g1);
         }
-
-
-        g.drawString("Level: " + getCurrentPlayer().level, 100, 400);
     }
 
     public void repaintCurrentShape() {
@@ -143,7 +143,7 @@ public class TetrisGamePanel extends JPanel {
     }
 
     public static int getBlockSizePx() {
-        return 40;
+        return 30;
     }
 
     public GameLoop getGameLoop() {

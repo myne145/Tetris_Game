@@ -194,7 +194,7 @@ public class Shapes {
     }
 
     public static int getBlockSizePx() {
-        return 40;
+        return 30;
     }
 
     public static float getFramesForBlockToMoveDown() {

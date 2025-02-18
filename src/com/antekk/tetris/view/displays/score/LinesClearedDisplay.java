@@ -1,5 +1,6 @@
 package com.antekk.tetris.view.displays.score;
 
+import com.antekk.tetris.game.Shapes;
 import com.antekk.tetris.view.TetrisGamePanel;
 
 import java.awt.*;
@@ -9,7 +10,7 @@ import static com.antekk.tetris.game.Shapes.getLinesCleared;
 public class LinesClearedDisplay extends TetrisTextDisplay {
 
     public LinesClearedDisplay() {
-        super(TetrisGamePanel.getBlockSizePx(), TetrisGamePanel.TOP + 15 * TetrisGamePanel.getBlockSizePx(), "LINES CLEARED");
+        super(TetrisGamePanel.getBlockSizePx(), TetrisGamePanel.BOTTOM - 2 * TetrisGamePanel.getBlockSizePx(), "LINES CLEARED");
     }
 
     @Override
@@ -29,6 +30,6 @@ public class LinesClearedDisplay extends TetrisTextDisplay {
 
     @Override
     protected float getTitleFontSize() {
-        return 28f;
+        return (float) (0.7 * Shapes.getBlockSizePx());
     }
 }

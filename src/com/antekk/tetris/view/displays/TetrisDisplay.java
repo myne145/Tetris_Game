@@ -1,5 +1,6 @@
 package com.antekk.tetris.view.displays;
 
+import com.antekk.tetris.game.Shapes;
 import com.antekk.tetris.view.TetrisColors;
 import com.antekk.tetris.view.TetrisGamePanel;
 
@@ -33,7 +34,7 @@ public abstract class TetrisDisplay {
     }
 
     protected float getTitleFontSize() {
-        return 36f;
+        return (float) (0.9 * Shapes.getBlockSizePx());
     }
 
     protected int getTitlePositionX() {

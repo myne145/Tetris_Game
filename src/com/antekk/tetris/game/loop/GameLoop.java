@@ -1,8 +1,10 @@
 package com.antekk.tetris.game.loop;
 
 import com.antekk.tetris.game.Shapes;
+import com.antekk.tetris.game.player.TetrisPlayer;
 import com.antekk.tetris.view.TetrisGamePanel;
 
+import javax.swing.*;
 import java.awt.*;
 
 import static com.antekk.tetris.game.Shapes.*;
@@ -46,6 +48,16 @@ public class GameLoop extends Thread {
             lastFrame = (int) System.currentTimeMillis();
             targetTime = lastFrame + timeBetweenFramesMillis;
         }
+        getCurrentPlayer().name = JOptionPane.showInputDialog(
+                null,
+                "Enter your name",
+                "Game over",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        if(getCurrentPlayer().name != null)
+            TetrisPlayer.getStatsFile().addPlayer(getCurrentPlayer());
+
     }
 
     private GameState updateGameState() {

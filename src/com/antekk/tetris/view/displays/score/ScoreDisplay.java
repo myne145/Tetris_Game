@@ -9,7 +9,7 @@ import static com.antekk.tetris.game.Shapes.getCurrentPlayer;
 public class ScoreDisplay extends TetrisTextDisplay {
 
     public ScoreDisplay() {
-        super(TetrisGamePanel.getBlockSizePx(), TetrisGamePanel.TOP + 11 * TetrisGamePanel.getBlockSizePx(), "SCORE");
+        super(TetrisGamePanel.getBlockSizePx(), TetrisGamePanel.BOTTOM - 6 * TetrisGamePanel.getBlockSizePx(), "SCORE");
     }
 
     @Override

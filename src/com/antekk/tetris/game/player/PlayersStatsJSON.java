@@ -14,7 +14,7 @@ public class PlayersStatsJSON {
     private File playersFile = new File("./best_players.json");
     private JSONArray players;
 
-    public void initialize() throws IOException {
+    private void initialize() throws IOException {
         //TODO: writing default content to file
         if(!playersFile.exists() && !playersFile.createNewFile()) {
             throw new FileSystemException("Cannot create " + playersFile.getAbsolutePath() + " file.");
@@ -78,8 +78,14 @@ public class PlayersStatsJSON {
         } catch (IOException e) {
             throw new RuntimeException("add a description here lol"); //TODO
         }
+    }
 
-
+    public PlayersStatsJSON() {
+        try {
+            initialize();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

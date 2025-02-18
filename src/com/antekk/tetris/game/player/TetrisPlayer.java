@@ -1,6 +1,7 @@
 package com.antekk.tetris.game.player;
 
 public class TetrisPlayer {
+    public static final PlayersStatsJSON playerStats = new PlayersStatsJSON();
     public long score = 0;
     public long linesCleared = 0;
     public int level = 0;
@@ -23,5 +24,9 @@ public class TetrisPlayer {
         this.linesCleared = linesCleared;
         this.level = level;
         this.name = name;
+    }
+
+    public static PlayersStatsJSON getStatsFile() {
+        return playerStats;
     }
 }
