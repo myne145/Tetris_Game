@@ -40,8 +40,6 @@ public class TetrisGamePanel extends JPanel {
         Graphics2D g = (Graphics2D)  g1;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-
-
         if(loop.getGameState() == GameState.PAUSED) {
             drawPauseScreen(g1);
             return;
@@ -111,6 +109,7 @@ public class TetrisGamePanel extends JPanel {
         BoxLayout layout = new BoxLayout(toolbar, BoxLayout.X_AXIS);
         toolbar.setLayout(layout);
 
+        toolbar.add(Box.createRigidArea(new Dimension(Shapes.getBlockSizePx(), 3)));
         toolbar.add(newGame);
         toolbar.add(Box.createRigidArea(new Dimension(Shapes.getBlockSizePx(), 3)));
         toolbar.add(pauseGame);
@@ -124,6 +123,20 @@ public class TetrisGamePanel extends JPanel {
         pauseGame.setFocusable(false);
         showBestPlayers.setFocusable(false);
 
+        newGame.addActionListener(e -> {
+            int option = JOptionPane.showConfirmDialog(null,
+                    "Do you really want to start a new game?",
+                    "Are you sure?",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+
+            if(option == 1)
+                return;
+
+            Shapes.startNewGame();
+        });
+
         pauseGame.addActionListener(e -> {
             loop.pauseAndUnpauseGame();
             repaint();
@@ -135,8 +148,7 @@ public class TetrisGamePanel extends JPanel {
         ActionMap actionMap = getActionMap();
         setupKeyBindings(inputMap, actionMap, this);
 
-        updateGameLevel();
-        updateCurrentShape();
+        Shapes.startNewGame();
 
         loop.start();
         repaint();

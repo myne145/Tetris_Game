@@ -17,7 +17,7 @@ public class Shapes {
     private static Shape currentShape;
     private static boolean wasHeldUsed = false;
     private static Shape shadow;
-    private static final TetrisPlayer currentPlayer = new TetrisPlayer();
+    private static TetrisPlayer currentPlayer = new TetrisPlayer();
     private static int comboCounter = -1;
     private static int targetLinesForNextLevel = 0;
     private static int currentLinesForNextLevel = 0;
@@ -27,16 +27,27 @@ public class Shapes {
                     0.1775, 0.2598, 0.388, 0.59, 0.92, 1.46, 2.36, 3.91, 6.61, 11.43, 20.23, 36.6)
     );
 
+
+    private static void fillShapeListWithAllShapeTypes() {
+        shapesList.add(new TShape());
+        shapesList.add(new ZShape());
+        shapesList.add(new JShape());
+        shapesList.add(new LShape());
+        shapesList.add(new LineShape());
+        shapesList.add(new SquareShape());
+        shapesList.add(new SShape());
+    }
+
     public static Shape getRandomizedShape() {
-        if(shapesList.size() == 1 || shapesList.isEmpty()) {
+        if(shapesList.isEmpty()) {
+            fillShapeListWithAllShapeTypes();
+            shapesList.sort((o1, o2) -> (int) (Math.random() * 2) - 1);
+        }
+
+
+        if(shapesList.size() == 1) {
             //filling the array
-            shapesList.add(new TShape());
-            shapesList.add(new ZShape());
-            shapesList.add(new JShape());
-            shapesList.add(new LShape());
-            shapesList.add(new LineShape());
-            shapesList.add(new SquareShape());
-            shapesList.add(new SShape());
+            fillShapeListWithAllShapeTypes();
 
             Shape firstShape = shapesList.getFirst();
             shapesList.removeFirst();
@@ -153,6 +164,19 @@ public class Shapes {
         getCurrentPlayer().level++;
         targetLinesForNextLevel = getCurrentPlayer().level * 5;
         currentLinesForNextLevel = 0;
+    }
+
+    public static void startNewGame() {
+        shapesList.clear();
+        stationaryShapes.clear();
+        heldShape = null;
+        currentPlayer = new TetrisPlayer();
+        targetLinesForNextLevel = 0;
+        currentLinesForNextLevel = 0;
+        wasHeldUsed = false;
+
+        updateGameLevel();
+        updateCurrentShape();
     }
 
     public static void swapHeldAndCurrentShapes() {

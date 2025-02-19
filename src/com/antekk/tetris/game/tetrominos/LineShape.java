@@ -1,7 +1,6 @@
 package com.antekk.tetris.game.tetrominos;
 
 import com.antekk.tetris.game.shapes.Shape;
-import com.antekk.tetris.view.TetrisGamePanel;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -96,7 +95,6 @@ public class LineShape extends Shape {
 
         if(rotationState == 3)
             move(0, -1);
-//        return true;
 
         boolean canRotate = super.rotate(direction);
 
