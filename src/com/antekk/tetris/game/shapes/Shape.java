@@ -143,9 +143,19 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
             maxDistanceX *= -1;
 
         for(Point p : getCollisionPoints()) {
-            if(p.x + maxDistanceX < 0)
+            if(p.x + maxDistanceX < 0 || p.x + maxDistanceX >= TetrisGamePanel.getBoardCols())
                 return false;
         }
+
+        for(Point p : getCollisionPoints()) {
+            for(Shape shape : getStationaryShapes()) {
+                for(Point shapePoint : shape.getCollisionPoints()) {
+                    if(p.x + maxDistanceX == shapePoint.x && p.y + maxDistanceY == shapePoint.y)
+                        return false;
+                }
+            }
+        }
+
         //TODO: max one vertical wall kick when shape lands
 
         move(maxDistanceX, maxDistanceY);

@@ -57,15 +57,6 @@ public class LineShape extends Shape {
         move(17 * getBlockSizePx(), 2 * getBlockSizePx());
     }
 
-//    @Override
-//    public void draw(Graphics g) {
-//        super.draw(g);
-//        g.setColor(Color.RED);
-//        g.fillRect(TetrisGamePanel.LEFT + Shapes.getBlockSizePx() * (getCenterPoint().x) - 5, TetrisGamePanel.TOP + Shapes.getBlockSizePx() * (getCenterPoint().y) - 5, 10, 10);
-//
-////        g.drawString(debugLine, 100, 500);
-//    }
-
     @Override
     public Point getCenterPoint() {
         if(collisionPoints.isEmpty())
@@ -85,14 +76,13 @@ public class LineShape extends Shape {
 
     @Override
     protected boolean rotate(int direction) {
+        LineShape clone = (LineShape) this.clone();
+
         rotationState += direction;
         if(rotationState == -1)
             rotationState = 3;
         else if(rotationState == 4)
             rotationState = 0;
-
-//        debugLine = "Rotation state: " + rotationState;
-
 
 
         if(rotationState == 0)
@@ -107,6 +97,15 @@ public class LineShape extends Shape {
         if(rotationState == 3)
             move(0, -1);
 //        return true;
-        return super.rotate(direction);
+
+        boolean canRotate = super.rotate(direction);
+
+        if(!canRotate) {
+            this.rotationState = clone.rotationState;
+            this.collisionPoints = clone.collisionPoints;
+            return false;
+        }
+
+        return true;
     }
 }
