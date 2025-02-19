@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 
 import static com.antekk.tetris.game.Shapes.*;
-import static com.antekk.tetris.view.TetrisGamePanel.*;
 
 public class GameLoop extends Thread {
     private final TetrisGamePanel currentPanel;
@@ -17,13 +16,13 @@ public class GameLoop extends Thread {
     private int framesSinceTetrominoLanded = 0;
 
     private final int timeBetweenFramesMillis = 1000 / 60;
-    private int lastFrame = (int) System.currentTimeMillis();
-    private int targetTime = lastFrame + timeBetweenFramesMillis;
 
-    private void gameLoop()  {
+    private void gameLoop() throws InterruptedException {
         while (gameState != GameState.LOST) {
-            int currentTime = (int) System.currentTimeMillis();
-            if(currentTime < targetTime || gameState == GameState.PAUSED)
+
+            Thread.sleep(timeBetweenFramesMillis); //this sucks, but uses less cpu than time ms tracking
+
+            if(gameState == GameState.PAUSED)
                 continue;
 
             //30 frames of lock delay
@@ -61,9 +60,6 @@ public class GameLoop extends Thread {
             }
 
             gameState = updateGameState();
-
-            lastFrame = (int) System.currentTimeMillis();
-            targetTime = lastFrame + timeBetweenFramesMillis;
         }
         getCurrentPlayer().name = JOptionPane.showInputDialog(
                 null,
@@ -110,7 +106,11 @@ public class GameLoop extends Thread {
     @Override
     public void run() {
         gameState = GameState.RUNNING;
-        gameLoop();
+        try {
+            gameLoop();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public GameLoop(TetrisGamePanel panel) {
