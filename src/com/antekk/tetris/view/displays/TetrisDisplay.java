@@ -6,7 +6,8 @@ import com.antekk.tetris.view.TetrisGamePanel;
 
 import java.awt.*;
 
-import static com.antekk.tetris.view.TetrisGamePanel.getBlockSizePx;
+import static com.antekk.tetris.game.Shapes.getBlockSizePx;
+
 
 public abstract class TetrisDisplay {
     protected final int x;
@@ -20,7 +21,7 @@ public abstract class TetrisDisplay {
         this.y = y;
         this.text = text;
 
-        textX = x + (int)(1.5 * TetrisGamePanel.getBlockSizePx());
+        textX = x + (int)(1.5 * getBlockSizePx());
     }
 
     public void drawDisplay(Graphics g) {
@@ -34,11 +35,11 @@ public abstract class TetrisDisplay {
     }
 
     protected float getTitleFontSize() {
-        return (float) (0.9 * Shapes.getBlockSizePx());
+        return (float) (0.9 * getBlockSizePx());
     }
 
     protected int getTitlePositionX() {
-        return x + (int)(1.5 * TetrisGamePanel.getBlockSizePx());
+        return x + (int)(1.5 * getBlockSizePx());
     }
 
     protected int getWidthInBlocks() {

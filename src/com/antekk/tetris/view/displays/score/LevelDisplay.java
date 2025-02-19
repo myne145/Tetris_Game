@@ -5,6 +5,8 @@ import com.antekk.tetris.view.TetrisGamePanel;
 
 import java.awt.*;
 
+import static com.antekk.tetris.game.Shapes.getBlockSizePx;
+
 public class LevelDisplay extends TetrisTextDisplay{
 
     @Override
@@ -13,7 +15,7 @@ public class LevelDisplay extends TetrisTextDisplay{
     }
 
     public LevelDisplay() {
-        super(Shapes.getBlockSizePx(), TetrisGamePanel.BOTTOM - 10 * TetrisGamePanel.getBlockSizePx(), "LEVEL");
+        super(getBlockSizePx(), TetrisGamePanel.BOTTOM - 10 * getBlockSizePx(), "LEVEL");
     }
 
     @Override

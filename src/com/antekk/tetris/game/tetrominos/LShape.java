@@ -7,8 +7,21 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class LShape extends Shape {
+import static com.antekk.tetris.game.Shapes.getBlockSizePx;
 
+public class LShape extends Shape {
+    private final Color stationaryColor = Color.ORANGE;
+    private final Color colorWhileMoving = new Color(255, 200, 0, 150);
+
+    @Override
+    public Color getDefaultColor() {
+        return stationaryColor;
+    }
+
+    @Override
+    public Color getDefaultColorForMovingShape() {
+        return colorWhileMoving;
+    }
 
     @Override
     public ArrayList<Point> getDefaultCollisionPoints() {
@@ -21,19 +34,14 @@ public class LShape extends Shape {
     }
 
     @Override
-    public Color getDefaultColor() {
-        return Color.ORANGE;
-    }
-
-    @Override
     public void setAsHeldShape() {
         super.setAsHeldShape();
-        move(-TetrisGamePanel.getBlockSizePx() / 2, TetrisGamePanel.getBlockSizePx() * 2);
+        move(-getBlockSizePx() / 2, getBlockSizePx() * 2);
     }
 
     @Override
     public void setAsNextShape() {
         super.setAsNextShape();
-        move((int) (17.5 * TetrisGamePanel.getBlockSizePx()), 2 * TetrisGamePanel.getBlockSizePx());
+        move((int) (17.5 * getBlockSizePx()), 2 * getBlockSizePx());
     }
 }

@@ -25,7 +25,7 @@ record TetrisKeybind(String name, int keyCode, Runnable action) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 action().run();
-                currentPanel.paintImmediately(0, 0, currentPanel.getWidth(), currentPanel.getHeight());
+                currentPanel.paintImmediately(0, TetrisGamePanel.TOP, currentPanel.getWidth(), currentPanel.getHeight());
             }
         });
     }

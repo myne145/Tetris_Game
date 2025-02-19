@@ -1,13 +1,17 @@
 package com.antekk.tetris.game.tetrominos;
 
 import com.antekk.tetris.game.shapes.Shape;
-import com.antekk.tetris.view.TetrisGamePanel;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.antekk.tetris.game.Shapes.getBlockSizePx;
+
 public class JShape extends Shape {
+    protected Color stationaryColor = Color.BLUE;
+    protected Color colorWhileMoving = new Color(0, 0, 255, 150);
+
     @Override
     public ArrayList<Point> getDefaultCollisionPoints() {
         return new ArrayList<>(Arrays.asList(
@@ -20,19 +24,24 @@ public class JShape extends Shape {
 
     @Override
     public Color getDefaultColor() {
-        return Color.BLUE;
+        return stationaryColor;
+    }
+
+    @Override
+    public Color getDefaultColorForMovingShape() {
+        return colorWhileMoving;
     }
 
 
     @Override
     public void setAsHeldShape() {
         super.setAsHeldShape();
-        move(-TetrisGamePanel.getBlockSizePx() / 2, TetrisGamePanel.getBlockSizePx() * 2);
+        move(-getBlockSizePx() / 2, getBlockSizePx() * 2);
     }
 
     @Override
     public void setAsNextShape() {
         super.setAsNextShape();
-        move((int) (17.5 * TetrisGamePanel.getBlockSizePx()), 2 * TetrisGamePanel.getBlockSizePx());
+        move((int) (17.5 * getBlockSizePx()), 2 * getBlockSizePx());
     }
 }

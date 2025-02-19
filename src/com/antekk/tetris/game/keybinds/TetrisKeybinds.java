@@ -9,7 +9,6 @@ import java.awt.event.KeyEvent;
 import static com.antekk.tetris.game.Shapes.getCurrentShape;
 
 public class TetrisKeybinds {
-    private static boolean lockPauseKey = false;
 
     public static void setupKeyBindings(InputMap inputMap, ActionMap actionMap, TetrisGamePanel gamePanel) {
         if (gamePanel == null || inputMap == null || actionMap == null) {

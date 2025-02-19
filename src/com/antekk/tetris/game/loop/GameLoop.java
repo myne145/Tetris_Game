@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static com.antekk.tetris.game.Shapes.*;
+import static com.antekk.tetris.view.TetrisGamePanel.*;
 
 public class GameLoop extends Thread {
     private final TetrisGamePanel currentPanel;
@@ -36,7 +37,7 @@ public class GameLoop extends Thread {
             while (linesToMoveBlock >= 1) {
                 canMoveDown = Shapes.getCurrentShape().moveDown();
                 linesToMoveBlock--;
-                currentPanel.repaintCurrentShape();
+                currentPanel.repaintBoard();
             }
 
             if(!canMoveDown)
@@ -49,7 +50,7 @@ public class GameLoop extends Thread {
                 while(Shapes.getCurrentShape().moveDown());
 
                 framesSinceTetrominoLanded = 0;
-                getCurrentShape().hasLanded = false;
+                getCurrentShape().hasLanded = true;
 
                 getStationaryShapes().add(getCurrentShape());
                 clearFullLines();
@@ -71,7 +72,7 @@ public class GameLoop extends Thread {
                 JOptionPane.INFORMATION_MESSAGE
         );
 
-        if(getCurrentPlayer().name != null)
+        if(getCurrentPlayer().name != null && !getCurrentPlayer().name.isEmpty())
             TetrisPlayer.getStatsFile().addPlayer(getCurrentPlayer());
 
     }

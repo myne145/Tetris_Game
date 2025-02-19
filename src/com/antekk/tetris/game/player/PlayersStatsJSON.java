@@ -9,13 +9,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileSystemException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 
 public class PlayersStatsJSON {
     private File playersFile = new File("./best_players.json");
     private JSONArray players;
 
     private void initialize() throws IOException {
-        //TODO: writing default content to file
         if(!playersFile.exists() && !playersFile.createNewFile()) {
             throw new FileSystemException("Cannot create " + playersFile.getAbsolutePath() + " file.");
         }
@@ -28,11 +28,12 @@ public class PlayersStatsJSON {
         try {
             players = new JSONArray(jsonText.toString());
         } catch (JSONException e) {
-            throw new JSONException("Invalid players JSON file!");
+            players = new JSONArray();
+            writePlayersToFile();
         }
     }
 
-    public TetrisPlayer parsePlayerAt(int index) {
+    private TetrisPlayer parsePlayerAt(int index) {
         JSONObject playerAtIndex = players.getJSONObject(index); //TODO exception handling here
 
         int loadedScore;
@@ -72,12 +73,24 @@ public class PlayersStatsJSON {
         }
 
         players.put(createPlayerJSONObject(player));
+        writePlayersToFile();
+    }
 
+    private void writePlayersToFile() {
         try(FileWriter writer = new FileWriter(playersFile)) {
             writer.write(players.toString(4));
         } catch (IOException e) {
             throw new RuntimeException("add a description here lol"); //TODO
         }
+    }
+
+    public ArrayList<TetrisPlayer> getPlayers() {
+        ArrayList<TetrisPlayer> result = new ArrayList<>();
+        for(int i = 0; i < players.length(); i++) {
+            result.add(parsePlayerAt(i));
+        }
+        result.sort((o1, o2) -> (int) (o2.score - o1.score));
+        return result;
     }
 
     public PlayersStatsJSON() {

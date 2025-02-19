@@ -158,6 +158,9 @@ public class Shapes {
     public static void swapHeldAndCurrentShapes() {
         currentShape = updateHeldShape(currentShape);
         shadow = (Shape) currentShape.clone();
+
+        shadow.reloadShadow();
+        while(shadow.moveDown());
     }
 
     public static Shape getCurrentShape() {
@@ -194,7 +197,7 @@ public class Shapes {
     }
 
     public static int getBlockSizePx() {
-        return 30;
+        return 40;
     }
 
     public static float getFramesForBlockToMoveDown() {

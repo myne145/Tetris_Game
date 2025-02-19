@@ -31,6 +31,7 @@ public class TetrisGamePanel extends JPanel {
     private final LevelDisplay levelDisplay = new LevelDisplay();
 
     private final GameLoop loop = new GameLoop(this);
+    private final BestPlayersDialog bestPlayersDialog = new BestPlayersDialog(this);
 
     @Override
     protected synchronized void paintComponent(Graphics g1) {
@@ -66,12 +67,18 @@ public class TetrisGamePanel extends JPanel {
         for(Shape shape : getStationaryShapes()) { //TODO ConcurrentModificationException here
             shape.draw(g1);
         }
+
+//        for(int i = 0; i <= getBoardCols(); i++) {
+//            g.drawLine(LEFT + i * Shapes.getBlockSizePx(), TOP, LEFT + i * Shapes.getBlockSizePx(), BOTTOM + Shapes.getBlockSizePx());
+//        }
+//
+//        for(int i = 0; i <= getBoardRows(); i++) {
+//            g.drawLine(LEFT, i * Shapes.getBlockSizePx() + TOP, RIGHT + LEFT, i * Shapes.getBlockSizePx() + TOP);
+//        }
     }
 
-    public void repaintCurrentShape() {
-        paintImmediately(LEFT + (getCurrentShape().getCenterPoint().x - 2) * Shapes.getBlockSizePx() - 1,
-                TOP + (getCurrentShape().getCenterPoint().y - 2) * Shapes.getBlockSizePx() - 1,
-                4 * Shapes.getBlockSizePx() + 2, 4 * Shapes.getBlockSizePx() + 2);
+    public void repaintBoard() {
+        paintImmediately(getBlockSizePx(), TOP, getWidth(), getHeight());
     }
 
     private void drawPauseScreen(Graphics g) {
@@ -98,6 +105,7 @@ public class TetrisGamePanel extends JPanel {
         setLayout(new BorderLayout());
         JButton newGame = new JButton("New game");
         JButton pauseGame = new JButton("Pause game");
+        JButton showBestPlayers = new JButton("Best players");
 
         JPanel toolbar = new JPanel();
         BoxLayout layout = new BoxLayout(toolbar, BoxLayout.X_AXIS);
@@ -106,18 +114,22 @@ public class TetrisGamePanel extends JPanel {
         toolbar.add(newGame);
         toolbar.add(Box.createRigidArea(new Dimension(Shapes.getBlockSizePx(), 3)));
         toolbar.add(pauseGame);
+        toolbar.add(Box.createRigidArea(new Dimension(Shapes.getBlockSizePx(), 3)));
+        toolbar.add(showBestPlayers);
 
 
         add(toolbar, BorderLayout.PAGE_START);
 
         newGame.setFocusable(false);
         pauseGame.setFocusable(false);
+        showBestPlayers.setFocusable(false);
 
         pauseGame.addActionListener(e -> {
             loop.pauseAndUnpauseGame();
             repaint();
         });
 
+        showBestPlayers.addActionListener(e -> showBestPlayersDialog(!bestPlayersDialog.isVisible()));
 
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = getActionMap();
@@ -127,6 +139,7 @@ public class TetrisGamePanel extends JPanel {
         updateCurrentShape();
 
         loop.start();
+        repaint();
     }
 
     @Override
@@ -142,11 +155,22 @@ public class TetrisGamePanel extends JPanel {
         return 10;
     }
 
-    public static int getBlockSizePx() {
-        return 30;
-    }
-
     public GameLoop getGameLoop() {
         return loop;
+    }
+
+    public void showBestPlayersDialog(boolean show) {
+        if(!show) {
+            bestPlayersDialog.dispose();
+            return;
+        }
+
+        if(getGameLoop().getGameState() == GameState.RUNNING) {
+            getGameLoop().pauseAndUnpauseGame();
+        }
+        repaint();
+
+        bestPlayersDialog.reloadData();
+        bestPlayersDialog.setVisible(true);
     }
 }

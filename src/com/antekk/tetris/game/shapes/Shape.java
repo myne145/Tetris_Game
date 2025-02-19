@@ -5,8 +5,7 @@ import com.antekk.tetris.view.TetrisGamePanel;
 import java.awt.*;
 import java.util.ArrayList;
 
-import static com.antekk.tetris.game.Shapes.getShadow;
-import static com.antekk.tetris.game.Shapes.getStationaryShapes;
+import static com.antekk.tetris.game.Shapes.*;
 
 
 public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowShape {
@@ -23,6 +22,8 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
     public abstract ArrayList<Point> getDefaultCollisionPoints();
 
     public abstract Color getDefaultColor();
+
+    public abstract Color getDefaultColorForMovingShape();
 
     public Shape() {
         setDefaultValues();
@@ -65,18 +66,12 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
                 continue;
 
             //Fill
-            g.setColor(this.getColor());
-            g.fillRect(TetrisGamePanel.LEFT + p.x * TetrisGamePanel.getBlockSizePx(), TetrisGamePanel.TOP + p.y * TetrisGamePanel.getBlockSizePx(), TetrisGamePanel.getBlockSizePx(), TetrisGamePanel.getBlockSizePx());
+            g.setColor(hasLanded ? this.getDefaultColor() : this.getDefaultColorForMovingShape());
+            g.fillRect(TetrisGamePanel.LEFT + p.x * getBlockSizePx(), TetrisGamePanel.TOP + p.y * getBlockSizePx(), getBlockSizePx(), getBlockSizePx());
 
             //Border
             g.setColor(Color.BLACK);
-            g.drawRect(TetrisGamePanel.LEFT + p.x * TetrisGamePanel.getBlockSizePx(), TetrisGamePanel.TOP + p.y * TetrisGamePanel.getBlockSizePx(), TetrisGamePanel.getBlockSizePx(), TetrisGamePanel.getBlockSizePx());
-
-
-//            g.setColor(Color.BLACK);
-//            for(Point collidingPoint : getCollisionsForPoint(p)) {
-//                g.fillOval(TetrisGamePanel.LEFT + collidingPoint.x * Shapes.getBlockSizePx() - 8, TetrisGamePanel.TOP + collidingPoint.y * Shapes.getBlockSizePx() - 8, 16, 16);
-//            }
+            g.drawRect(TetrisGamePanel.LEFT + p.x * getBlockSizePx(), TetrisGamePanel.TOP + p.y * getBlockSizePx(), getBlockSizePx(), getBlockSizePx());
         }
     }
 
@@ -96,7 +91,7 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
             if(p.y < 0)
                 continue;
 
-            g.drawRect(TetrisGamePanel.LEFT + p.x * TetrisGamePanel.getBlockSizePx(), TetrisGamePanel.TOP + p.y * TetrisGamePanel.getBlockSizePx(), TetrisGamePanel.getBlockSizePx(), TetrisGamePanel.getBlockSizePx());
+            g.drawRect(TetrisGamePanel.LEFT + p.x * getBlockSizePx(), TetrisGamePanel.TOP + p.y * getBlockSizePx(), getBlockSizePx(), getBlockSizePx());
         }
         g.setStroke(ShadowShape.defaultBorder);
     }
@@ -262,9 +257,10 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
             }
         }
 
-        if(!checkForCollisionsForShapeXAxis().isEmpty())
-//        if(!getCollisionsForShape().isEmpty())
+        //TODO: fix collisions here
+        if(!checkForCollisionsForShapeXAxis().isEmpty()) {
             return false;
+        }
 
         move(amount, 0);
         reloadShadow();
@@ -301,8 +297,8 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
     private void multiplyPoints() {
         setDefaultValues();
         for(Point p : getCollisionPoints()) {
-            p.x *= TetrisGamePanel.getBlockSizePx();
-            p.y *= TetrisGamePanel.getBlockSizePx();
+            p.x *= getBlockSizePx();
+            p.y *= getBlockSizePx();
         }
     }
 
@@ -318,10 +314,6 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
 
     public ArrayList<Point> getCollisionPoints() {
         return collisionPoints;
-    }
-
-    public Color getColor() {
-        return shapeColor;
     }
 
     public Point getCenterPoint() {
@@ -341,7 +333,7 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
             throw new RuntimeException(e);
         }
 
-        shape.shapeColor = getColor();
+        shape.shapeColor = getDefaultColor();
         shape.collisionPoints = new ArrayList<>();
         for(Point p : getCollisionPoints())
             shape.collisionPoints.add(new Point(p.x, p.y));

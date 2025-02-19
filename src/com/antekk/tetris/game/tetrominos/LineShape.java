@@ -7,24 +7,32 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.antekk.tetris.game.Shapes.getBlockSizePx;
+
 public class LineShape extends Shape {
     private int rotationState = 0; //0,1,2,3
-//    private static String debugLine = "Rotation state: 0";
+    private final Color stationaryColor = Color.CYAN;
+    private final Color colorWhileMoving = new Color(0, 255, 255, 150);
+
+    @Override
+    public Color getDefaultColor() {
+        return stationaryColor;
+    }
+
+    @Override
+    public Color getDefaultColorForMovingShape() {
+        return colorWhileMoving;
+    }
 
 
     @Override
     public ArrayList<Point> getDefaultCollisionPoints() {
         return new ArrayList<>(Arrays.asList(
-                new Point(5,-1),
-                new Point(4,-1),
-                new Point(3,-1),
-                new Point(6,-1)
+                new Point(5,0),
+                new Point(4,0),
+                new Point(3,0),
+                new Point(6,0)
         ));
-    }
-
-    @Override
-    public Color getDefaultColor() {
-        return Color.CYAN;
     }
 
     public int getDefaultRotationState() {
@@ -40,13 +48,13 @@ public class LineShape extends Shape {
     @Override
     public void setAsHeldShape() {
         super.setAsHeldShape();
-        move(-TetrisGamePanel.getBlockSizePx(), 2 * TetrisGamePanel.getBlockSizePx());
+        move(-getBlockSizePx(), 2 * getBlockSizePx());
     }
 
     @Override
     public void setAsNextShape() {
         super.setAsNextShape();
-        move(17 * TetrisGamePanel.getBlockSizePx(), 2 * TetrisGamePanel.getBlockSizePx());
+        move(17 * getBlockSizePx(), 2 * getBlockSizePx());
     }
 
 //    @Override
