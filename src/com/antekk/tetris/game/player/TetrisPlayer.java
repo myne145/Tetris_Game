@@ -15,6 +15,10 @@ public class TetrisPlayer {
         score += (long) value * level;
     }
 
+    public void addMultipliedScore(ScoreValue scoreValue) {
+            score += scoreValue.getValue();
+    }
+
     public TetrisPlayer() {
 
     }

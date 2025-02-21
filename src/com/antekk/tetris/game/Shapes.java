@@ -124,6 +124,7 @@ public class Shapes {
         return xPositions.size() == TetrisGamePanel.getBoardCols();
     }
 
+    //TODO: fix this logic
     private static void clearLineAt(int yStart, int yEnd) {
         if(yStart > yEnd) {
             int temp = yEnd;
@@ -184,7 +185,7 @@ public class Shapes {
         shadow = (Shape) currentShape.clone();
 
         shadow.reloadShadow();
-        while(shadow.moveDown());
+        while(shadow.moveVertically());
     }
 
     public static Shape getCurrentShape() {
@@ -196,7 +197,7 @@ public class Shapes {
         shadow = (Shape) currentShape.clone();
 
         shadow.reloadShadow();
-        while(shadow.moveDown());
+        while(shadow.moveVertically());
     }
 
     public static Shape getHeldShape() {
@@ -221,7 +222,7 @@ public class Shapes {
     }
 
     public static int getBlockSizePx() {
-        return 40;
+        return 20;
     }
 
     public static float getFramesForBlockToMoveDown() {

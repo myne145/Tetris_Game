@@ -28,7 +28,7 @@ public class TetrisKeybinds {
         ).bindKeyPressed();
 
         new TetrisKeybind("MOVE_DOWN", KeyEvent.VK_DOWN,
-                () -> getCurrentShape().moveDown()
+                () -> getCurrentShape().moveDownWithScore()
         ).bindKeyPressed();
 
         new TetrisKeybind("HARD_DROP", KeyEvent.VK_SPACE,

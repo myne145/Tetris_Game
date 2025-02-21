@@ -1,5 +1,7 @@
 package com.antekk.tetris.game.shapes;
 
+import com.antekk.tetris.game.Shapes;
+import com.antekk.tetris.game.player.ScoreValue;
 import com.antekk.tetris.view.TetrisGamePanel;
 
 import java.awt.*;
@@ -32,14 +34,14 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
     public boolean rotateLeft() {
         reloadShadow();
         getShadow().rotate(-1);
-        while(getShadow().moveDown());
+        while(getShadow().moveVertically());
         return rotate(-1);
     }
 
     public boolean rotateRight() {
         reloadShadow();
         getShadow().rotate(1);
-        while(getShadow().moveDown());
+        while(getShadow().moveVertically());
         return rotate(1);
     }
 
@@ -53,10 +55,13 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
 
     public void hardDrop() {
         wasHardDropUsed = true;
-        while(moveVertically());
+        while(moveVertically()) {
+            Shapes.getCurrentPlayer().addMultipliedScore(ScoreValue.HARD_DROP);
+        }
     }
 
-    public boolean moveDown() {
+    public boolean moveDownWithScore() {
+        Shapes.getCurrentPlayer().addMultipliedScore(ScoreValue.MOVE_DOWN);
         return moveVertically();
     }
 
@@ -274,7 +279,7 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
 
         move(amount, 0);
         reloadShadow();
-        while(getShadow().moveDown());
+        while(getShadow().moveVertically());
 
         return true;
     }

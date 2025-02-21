@@ -34,7 +34,7 @@ public class GameLoop extends Thread {
 
             boolean canMoveDown = true;
             while (linesToMoveBlock >= 1) {
-                canMoveDown = Shapes.getCurrentShape().moveDown();
+                canMoveDown = Shapes.getCurrentShape().moveVertically();
                 linesToMoveBlock--;
                 currentPanel.repaintBoard();
             }
@@ -46,7 +46,7 @@ public class GameLoop extends Thread {
                     getCurrentShape().wasHardDropUsed()) {
 
                 //so that the shape doesnt end up in the air (terrible solution imo, TODO: verify that i guess)
-                while(Shapes.getCurrentShape().moveDown());
+                while(Shapes.getCurrentShape().moveVertically());
 
                 framesSinceTetrominoLanded = 0;
                 getCurrentShape().hasLanded = true;

@@ -5,7 +5,9 @@ public enum ScoreValue {
     DOUBLE(300),
     TRIPLE(500),
     TETRIS(800),
-    COMBO(50);
+    COMBO(50),
+    MOVE_DOWN(1),
+    HARD_DROP(2);
 
 
     private int value;
