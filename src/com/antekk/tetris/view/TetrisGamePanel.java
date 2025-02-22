@@ -3,6 +3,7 @@ package com.antekk.tetris.view;
 import com.antekk.tetris.game.Shapes;
 import com.antekk.tetris.game.loop.GameLoop;
 import com.antekk.tetris.game.loop.GameState;
+import com.antekk.tetris.view.displays.ScoreRewardDisplay;
 import com.antekk.tetris.view.displays.score.LevelDisplay;
 import com.antekk.tetris.view.displays.score.LinesClearedDisplay;
 import com.antekk.tetris.view.displays.score.ScoreDisplay;
@@ -11,6 +12,7 @@ import com.antekk.tetris.view.displays.shapes.NextShapeDisplay;
 import com.antekk.tetris.game.shapes.Shape;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 import static com.antekk.tetris.game.Shapes.*;
@@ -32,6 +34,7 @@ public class TetrisGamePanel extends JPanel {
 
     private final GameLoop loop = new GameLoop(this);
     private final BestPlayersDialog bestPlayersDialog = new BestPlayersDialog(this);
+    private final ScoreRewardDisplay addedScoreText = new ScoreRewardDisplay();
 
     @Override
     protected synchronized void paintComponent(Graphics g1) {
@@ -100,7 +103,9 @@ public class TetrisGamePanel extends JPanel {
     }
 
     protected TetrisGamePanel() {
+        Shapes.setGamePanel(this);
         setLayout(new BorderLayout());
+        setDoubleBuffered(true);
         JButton newGame = new JButton("New game");
         JButton pauseGame = new JButton("Pause game");
         JButton showBestPlayers = new JButton("Best players");
@@ -118,6 +123,7 @@ public class TetrisGamePanel extends JPanel {
 
 
         add(toolbar, BorderLayout.PAGE_START);
+        add(addedScoreText, BorderLayout.CENTER);
 
         newGame.setFocusable(false);
         pauseGame.setFocusable(false);
@@ -142,6 +148,7 @@ public class TetrisGamePanel extends JPanel {
             repaint();
         });
 
+        addedScoreText.setBorder(new EmptyBorder(new Insets(0,LEFT + RIGHT + Shapes.getBlockSizePx(), 0, 0)));
         showBestPlayers.addActionListener(e -> showBestPlayersDialog(!bestPlayersDialog.isVisible()));
 
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -169,6 +176,10 @@ public class TetrisGamePanel extends JPanel {
 
     public GameLoop getGameLoop() {
         return loop;
+    }
+
+    public ScoreRewardDisplay getScoreBonusDisplay() {
+        return addedScoreText;
     }
 
     public void showBestPlayersDialog(boolean show) {

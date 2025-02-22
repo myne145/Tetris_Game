@@ -56,12 +56,12 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
     public void hardDrop() {
         wasHardDropUsed = true;
         while(moveVertically()) {
-            Shapes.getCurrentPlayer().addMultipliedScore(ScoreValue.HARD_DROP);
+            Shapes.getCurrentPlayer().addScore(ScoreValue.HARD_DROP);
         }
     }
 
     public boolean moveDownWithScore() {
-        Shapes.getCurrentPlayer().addMultipliedScore(ScoreValue.MOVE_DOWN);
+        Shapes.getCurrentPlayer().addScore(ScoreValue.MOVE_DOWN);
         return moveVertically();
     }
 

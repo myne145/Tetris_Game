@@ -17,10 +17,11 @@ public class Shapes {
     private static Shape currentShape;
     private static boolean wasHeldUsed = false;
     private static Shape shadow;
-    private static TetrisPlayer currentPlayer = new TetrisPlayer();
     private static int comboCounter = -1;
     private static int targetLinesForNextLevel = 0;
     private static int currentLinesForNextLevel = 0;
+    private static TetrisGamePanel gamePanel;
+    private static TetrisPlayer currentPlayer;
 
     private static final ArrayList<Double> speedValues = new ArrayList<>(
            Arrays.asList(0.01667, 0.021017, 0.026977, 0.035256, 0.04693, 0.06361, 0.0879, 0.1236,
@@ -108,7 +109,7 @@ public class Shapes {
 
         comboCounter++;
         clearLineAt(start, end);
-        getCurrentPlayer().addNonMultipliedScore(ScoreValue.COMBO.getValue() * comboCounter);
+        getCurrentPlayer().addScore(ScoreValue.COMBO.getValue() * comboCounter * getCurrentPlayer().level);
     }
 
     private static boolean isLineFull(int y) {
@@ -154,7 +155,7 @@ public class Shapes {
         }
         currentPlayer.linesCleared += clearedLines;
         currentLinesForNextLevel += clearedLines;
-        currentPlayer.addNonMultipliedScore(ScoreValue.fromClearedLines(clearedLines));
+        currentPlayer.addScore(ScoreValue.fromClearedLines(clearedLines));
     }
 
     public static void updateGameLevel() {
@@ -171,7 +172,7 @@ public class Shapes {
         shapesList.clear();
         stationaryShapes.clear();
         heldShape = null;
-        currentPlayer = new TetrisPlayer();
+        currentPlayer = new TetrisPlayer(gamePanel.getScoreBonusDisplay());
         targetLinesForNextLevel = 0;
         currentLinesForNextLevel = 0;
         wasHeldUsed = false;
@@ -222,7 +223,7 @@ public class Shapes {
     }
 
     public static int getBlockSizePx() {
-        return 20;
+        return 40;
     }
 
     public static float getFramesForBlockToMoveDown() {
@@ -239,5 +240,9 @@ public class Shapes {
 
     public static Shape getShadow() {
         return shadow;
+    }
+
+    public static void setGamePanel(TetrisGamePanel gamePanel) {
+        Shapes.gamePanel = gamePanel;
     }
 }
