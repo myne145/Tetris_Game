@@ -37,6 +37,8 @@ public class TetrisGamePanel extends JPanel {
     private final GameLoop loop = new GameLoop(this);
     private final BestPlayersDialog bestPlayersDialog = new BestPlayersDialog(this);
     private final ScoreRewardDisplay addedScoreText;
+    private final JPanel toolbar = new JPanel();
+    private final OptionsDialog optionsDialog = new OptionsDialog(this);
 
     @Override
     protected synchronized void paintComponent(Graphics g1) {
@@ -116,8 +118,8 @@ public class TetrisGamePanel extends JPanel {
         JButton newGame = new JButton("New game");
         JButton pauseGame = new JButton("Pause game");
         JButton showBestPlayers = new JButton("Best players");
+        JButton options = new JButton("Options");
 
-        JPanel toolbar = new JPanel();
         BoxLayout layout = new BoxLayout(toolbar, BoxLayout.X_AXIS);
         toolbar.setLayout(layout);
         toolbar.setBackground(TetrisColors.backgroundColor);
@@ -128,6 +130,8 @@ public class TetrisGamePanel extends JPanel {
         toolbar.add(pauseGame);
         toolbar.add(Box.createRigidArea(new Dimension(Shapes.getBlockSizePx(), 3)));
         toolbar.add(showBestPlayers);
+        toolbar.add(Box.createRigidArea(new Dimension(Shapes.getBlockSizePx(), 3)));
+        toolbar.add(options);
 
         add(toolbar, BorderLayout.PAGE_START);
         add(addedScoreText, BorderLayout.CENTER);
@@ -135,6 +139,7 @@ public class TetrisGamePanel extends JPanel {
         newGame.setFocusable(false);
         pauseGame.setFocusable(false);
         showBestPlayers.setFocusable(false);
+        options.setFocusable(false);
 
         newGame.addActionListener(e -> {
             int option = JOptionPane.showConfirmDialog(null,
@@ -155,6 +160,8 @@ public class TetrisGamePanel extends JPanel {
             repaint();
         });
 
+        options.addActionListener(e -> optionsDialog.setVisible(true));
+
         addedScoreText.setBorder(new EmptyBorder(new Insets(0,LEFT + RIGHT + Shapes.getBlockSizePx(), 0, 0)));
         showBestPlayers.addActionListener(e -> showBestPlayersDialog(!bestPlayersDialog.isVisible()));
 
@@ -171,6 +178,13 @@ public class TetrisGamePanel extends JPanel {
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(RIGHT + LEFT + 8 * getBlockSizePx(), BOTTOM + TOP);
+    }
+
+    @Override
+    public void setBackground(Color bg) {
+        super.setBackground(bg);
+        if(toolbar != null)
+            toolbar.setBackground(bg);
     }
 
     public static int getBoardRows() {

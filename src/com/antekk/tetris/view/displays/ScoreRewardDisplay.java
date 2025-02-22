@@ -10,7 +10,6 @@ import java.awt.*;
 public class ScoreRewardDisplay extends JPanel implements Runnable{
     private Thread animationThread;
     private int alpha = 255;
-    private Color textColor = TetrisColors.foregroundColor;
     private final JLabel topText = new JLabel();
     private final JLabel bottomText = new JLabel();
 
@@ -40,8 +39,8 @@ public class ScoreRewardDisplay extends JPanel implements Runnable{
 
     @Override
     public void run() {
-        topText.setForeground(textColor);
-        bottomText.setForeground(textColor);
+        topText.setForeground(TetrisColors.foregroundColor);
+        bottomText.setForeground(TetrisColors.foregroundColor);
         this.setVisible(true);
         try {
             Thread.sleep(700);
@@ -49,8 +48,16 @@ public class ScoreRewardDisplay extends JPanel implements Runnable{
             throw new RuntimeException(e);
         }
         while(alpha >= 0) {
-            topText.setForeground(new Color(textColor.getRed(), textColor.getGreen(), textColor.getBlue(), alpha));
-            bottomText.setForeground(new Color(textColor.getRed(), textColor.getGreen(), textColor.getBlue(), alpha));
+            topText.setForeground(new Color(TetrisColors.foregroundColor.getRed(),
+                    TetrisColors.foregroundColor.getGreen(),
+                    TetrisColors.foregroundColor.getBlue(),
+                    alpha)
+            );
+            bottomText.setForeground(new Color(TetrisColors.foregroundColor.getRed(),
+                    TetrisColors.foregroundColor.getGreen(),
+                    TetrisColors.foregroundColor.getBlue(),
+                    alpha)
+            );
             alpha -= 10;
 
             try {

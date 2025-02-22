@@ -15,11 +15,14 @@ public class BestPlayersDialog extends JDialog {
 
     protected void reloadData() {
         model.setRowCount(0);
+        int place = 1;
         for(TetrisPlayer player : TetrisPlayer.playerStats.getPlayers()) {
             model.addRow(new String[] {
+                    String.valueOf(place),
                     player.name, String.valueOf(player.score),
                     String.valueOf(player.linesCleared), String.valueOf(player.level)
             });
+            place++;
         }
     }
 
@@ -31,6 +34,7 @@ public class BestPlayersDialog extends JDialog {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        model.addColumn("Place");
         model.addColumn("Name");
         model.addColumn("Score");
         model.addColumn("Lines cleared");
