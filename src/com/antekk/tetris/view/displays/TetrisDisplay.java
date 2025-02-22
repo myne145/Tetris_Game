@@ -1,8 +1,6 @@
 package com.antekk.tetris.view.displays;
 
-import com.antekk.tetris.game.Shapes;
-import com.antekk.tetris.view.TetrisColors;
-import com.antekk.tetris.view.TetrisGamePanel;
+import com.antekk.tetris.view.themes.TetrisColors;
 
 import java.awt.*;
 
@@ -25,12 +23,13 @@ public abstract class TetrisDisplay {
     }
 
     public void drawDisplay(Graphics g) {
-        g.setColor(TetrisColors.backgroundColor); //fill
+        g.setColor(TetrisColors.boardColor); //fill
         g.fillRoundRect(x + 1, y + 1, getWidthInBlocks() * getBlockSizePx() - 1, getHeightInBlocks() * getBlockSizePx() - 1,8,8);
 
-        g.setColor(TetrisColors.foregroundColor); //border
+        g.setColor(TetrisColors.borderColor); //border
         g.setFont(g.getFont().deriveFont(getTitleFontSize()).deriveFont(Font.BOLD));
         g.drawRoundRect(x, y, getWidthInBlocks() * getBlockSizePx(), getHeightInBlocks() * getBlockSizePx(),8,8);
+        g.setColor(TetrisColors.foregroundColor);
         g.drawString(text, getTitlePositionX(), y + getBlockSizePx());
     }
 

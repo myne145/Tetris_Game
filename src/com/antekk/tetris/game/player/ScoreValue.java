@@ -3,7 +3,7 @@ package com.antekk.tetris.game.player;
 public enum ScoreValue {
     SIGLE(100, true, "Single"),
     DOUBLE(300, true, "Double"),
-    TRIPLE(500, true, "Tripple"),
+    TRIPLE(500, true, "Triple"),
     TETRIS(800, true, "Tetris"),
     COMBO(50, true, "Combo"),
     MOVE_DOWN(1, false, null),

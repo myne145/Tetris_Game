@@ -10,13 +10,15 @@ import com.antekk.tetris.view.displays.score.ScoreDisplay;
 import com.antekk.tetris.view.displays.shapes.HeldShapeDisplay;
 import com.antekk.tetris.view.displays.shapes.NextShapeDisplay;
 import com.antekk.tetris.game.shapes.Shape;
+import com.antekk.tetris.view.themes.TetrisColors;
+import com.antekk.tetris.view.themes.Theme;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 import static com.antekk.tetris.game.Shapes.*;
-import static com.antekk.tetris.game.Shapes.getShadow;
+import static com.antekk.tetris.game.Shapes.getGhostShape;
 import static com.antekk.tetris.game.keybinds.TetrisKeybinds.setupKeyBindings;
 
 public class TetrisGamePanel extends JPanel {
@@ -34,7 +36,7 @@ public class TetrisGamePanel extends JPanel {
 
     private final GameLoop loop = new GameLoop(this);
     private final BestPlayersDialog bestPlayersDialog = new BestPlayersDialog(this);
-    private final ScoreRewardDisplay addedScoreText = new ScoreRewardDisplay();
+    private final ScoreRewardDisplay addedScoreText;
 
     @Override
     protected synchronized void paintComponent(Graphics g1) {
@@ -49,9 +51,9 @@ public class TetrisGamePanel extends JPanel {
         }
 
         //Main game area
-        g1.setColor(TetrisColors.foregroundColor); //border
+        g1.setColor(TetrisColors.borderColor); //border
         g1.drawRoundRect(LEFT, TOP, RIGHT, BOTTOM,8,8);
-        g1.setColor(TetrisColors.backgroundColor); //fill
+        g1.setColor(TetrisColors.boardColor); //fill
         g1.fillRoundRect(LEFT+1, TOP+1, RIGHT-1, BOTTOM-1,8,8);
 
         heldShapeDisplay.drawDisplay(g1);
@@ -60,8 +62,8 @@ public class TetrisGamePanel extends JPanel {
         linesClearedDisplay.drawDisplay(g1);
         levelDisplay.drawDisplay(g1);
 
-        if(getShadow() != null)
-            getShadow().drawAsShadow((Graphics2D) g1);
+        if(getGhostShape() != null)
+            getGhostShape().drawGhostShape((Graphics2D) g1);
 
         //Shapes
         getCurrentShape().draw(g1);
@@ -83,7 +85,7 @@ public class TetrisGamePanel extends JPanel {
     }
 
     private void drawPauseScreen(Graphics g) {
-        g.setColor(TetrisColors.backgroundColor);
+        g.setColor(TetrisColors.boardColor);
         g.fillRect(0,0,getWidth(),getHeight());
 
         g.setColor(TetrisColors.foregroundColor);
@@ -104,8 +106,13 @@ public class TetrisGamePanel extends JPanel {
 
     protected TetrisGamePanel() {
         Shapes.setGamePanel(this);
+        TetrisColors.setTheme(Theme.LIGHT);
+        addedScoreText = new ScoreRewardDisplay();
+
         setLayout(new BorderLayout());
         setDoubleBuffered(true);
+        setBackground(TetrisColors.backgroundColor);
+
         JButton newGame = new JButton("New game");
         JButton pauseGame = new JButton("Pause game");
         JButton showBestPlayers = new JButton("Best players");
@@ -113,6 +120,7 @@ public class TetrisGamePanel extends JPanel {
         JPanel toolbar = new JPanel();
         BoxLayout layout = new BoxLayout(toolbar, BoxLayout.X_AXIS);
         toolbar.setLayout(layout);
+        toolbar.setBackground(TetrisColors.backgroundColor);
 
         toolbar.add(Box.createRigidArea(new Dimension(Shapes.getBlockSizePx(), 3)));
         toolbar.add(newGame);
@@ -120,7 +128,6 @@ public class TetrisGamePanel extends JPanel {
         toolbar.add(pauseGame);
         toolbar.add(Box.createRigidArea(new Dimension(Shapes.getBlockSizePx(), 3)));
         toolbar.add(showBestPlayers);
-
 
         add(toolbar, BorderLayout.PAGE_START);
         add(addedScoreText, BorderLayout.CENTER);

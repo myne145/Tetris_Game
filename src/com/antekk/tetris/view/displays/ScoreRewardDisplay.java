@@ -1,7 +1,7 @@
 package com.antekk.tetris.view.displays;
 
 import com.antekk.tetris.game.Shapes;
-import com.antekk.tetris.view.TetrisColors;
+import com.antekk.tetris.view.themes.TetrisColors;
 import com.antekk.tetris.view.TetrisGamePanel;
 
 import javax.swing.*;

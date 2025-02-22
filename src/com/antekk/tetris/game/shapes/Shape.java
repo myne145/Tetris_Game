@@ -3,6 +3,7 @@ package com.antekk.tetris.game.shapes;
 import com.antekk.tetris.game.Shapes;
 import com.antekk.tetris.game.player.ScoreValue;
 import com.antekk.tetris.view.TetrisGamePanel;
+import com.antekk.tetris.view.themes.TetrisColors;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import static com.antekk.tetris.game.Shapes.*;
 
 
-public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowShape {
+public abstract class Shape implements Cloneable, HeldShape, NextShape, GhostShape {
     protected ArrayList<Point> collisionPoints;
     protected Color shapeColor;
     private boolean wasHardDropUsed = false;
@@ -32,16 +33,16 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
     }
 
     public boolean rotateLeft() {
-        reloadShadow();
-        getShadow().rotate(-1);
-        while(getShadow().moveVertically());
+        reloadGhostShape();
+        getGhostShape().rotate(-1);
+        while(getGhostShape().moveVertically());
         return rotate(-1);
     }
 
     public boolean rotateRight() {
-        reloadShadow();
-        getShadow().rotate(1);
-        while(getShadow().moveVertically());
+        reloadGhostShape();
+        getGhostShape().rotate(1);
+        while(getGhostShape().moveVertically());
         return rotate(1);
     }
 
@@ -75,30 +76,30 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
             g.fillRect(TetrisGamePanel.LEFT + p.x * getBlockSizePx(), TetrisGamePanel.TOP + p.y * getBlockSizePx(), getBlockSizePx(), getBlockSizePx());
 
             //Border
-            g.setColor(Color.BLACK);
+            g.setColor(TetrisColors.shapeBorderColor);
             g.drawRect(TetrisGamePanel.LEFT + p.x * getBlockSizePx(), TetrisGamePanel.TOP + p.y * getBlockSizePx(), getBlockSizePx(), getBlockSizePx());
         }
     }
 
     @Override
-    public void reloadShadow() {
-        int dx = this.getCenterPoint().x - getShadow().getCenterPoint().x;
-        int dy = this.getCenterPoint().y - getShadow().getCenterPoint().y;
-        getShadow().move(dx, dy);
+    public void reloadGhostShape() {
+        int dx = this.getCenterPoint().x - getGhostShape().getCenterPoint().x;
+        int dy = this.getCenterPoint().y - getGhostShape().getCenterPoint().y;
+        getGhostShape().move(dx, dy);
     }
 
     @Override
-    public void drawAsShadow(Graphics2D g) {
+    public void drawGhostShape(Graphics2D g) {
         //Border
-        g.setColor(Color.BLACK);
-        g.setStroke(ShadowShape.shadowShapeBorder);
+        g.setColor(TetrisColors.shapeBorderColor);
+        g.setStroke(GhostShape.ghostShapeBorder);
         for(Point p : getCollisionPoints()) {
             if(p.y < 0)
                 continue;
 
             g.drawRect(TetrisGamePanel.LEFT + p.x * getBlockSizePx(), TetrisGamePanel.TOP + p.y * getBlockSizePx(), getBlockSizePx(), getBlockSizePx());
         }
-        g.setStroke(ShadowShape.defaultBorder);
+        g.setStroke(GhostShape.defaultBorder);
     }
 
     protected boolean handleWallKicks() {
@@ -278,8 +279,8 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, ShadowSh
         }
 
         move(amount, 0);
-        reloadShadow();
-        while(getShadow().moveVertically());
+        reloadGhostShape();
+        while(getGhostShape().moveVertically());
 
         return true;
     }

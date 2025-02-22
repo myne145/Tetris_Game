@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static com.antekk.tetris.game.Shapes.*;
+import static com.antekk.tetris.view.TetrisGamePanel.TOP;
 
 public class GameLoop extends Thread {
     private final TetrisGamePanel currentPanel;
@@ -56,7 +57,7 @@ public class GameLoop extends Thread {
                 updateGameLevel();
                 updateCurrentShape();
                 unlockHeld();
-                currentPanel.paintImmediately(0, 0, currentPanel.getWidth(), currentPanel.getHeight());
+                currentPanel.paintImmediately(0, TOP, currentPanel.getWidth(), currentPanel.getHeight());
             }
 
             gameState = updateGameState();

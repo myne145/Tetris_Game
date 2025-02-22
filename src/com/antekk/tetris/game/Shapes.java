@@ -16,7 +16,7 @@ public class Shapes {
     private static Shape heldShape;
     private static Shape currentShape;
     private static boolean wasHeldUsed = false;
-    private static Shape shadow;
+    private static Shape ghostShape;
     private static int comboCounter = -1;
     private static int targetLinesForNextLevel = 0;
     private static int currentLinesForNextLevel = 0;
@@ -183,10 +183,10 @@ public class Shapes {
 
     public static void swapHeldAndCurrentShapes() {
         currentShape = updateHeldShape(currentShape);
-        shadow = (Shape) currentShape.clone();
+        ghostShape = (Shape) currentShape.clone();
 
-        shadow.reloadShadow();
-        while(shadow.moveVertically());
+        ghostShape.reloadGhostShape();
+        while(ghostShape.moveVertically());
     }
 
     public static Shape getCurrentShape() {
@@ -195,10 +195,10 @@ public class Shapes {
 
     public static void updateCurrentShape() {
         currentShape = getRandomizedShape();
-        shadow = (Shape) currentShape.clone();
+        ghostShape = (Shape) currentShape.clone();
 
-        shadow.reloadShadow();
-        while(shadow.moveVertically());
+        ghostShape.reloadGhostShape();
+        while(ghostShape.moveVertically());
     }
 
     public static Shape getHeldShape() {
@@ -238,8 +238,8 @@ public class Shapes {
         return getCurrentPlayer().linesCleared;
     }
 
-    public static Shape getShadow() {
-        return shadow;
+    public static Shape getGhostShape() {
+        return ghostShape;
     }
 
     public static void setGamePanel(TetrisGamePanel gamePanel) {
