@@ -62,8 +62,10 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, GhostSha
     }
 
     public boolean moveDownWithScore() {
-        Shapes.getCurrentPlayer().addScore(ScoreValue.MOVE_DOWN);
-        return moveVertically();
+        boolean canMoveDown = moveVertically();
+        if(canMoveDown)
+            Shapes.getCurrentPlayer().addScore(ScoreValue.MOVE_DOWN);
+        return canMoveDown;
     }
 
     public void draw(Graphics g) {
@@ -237,18 +239,21 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, GhostSha
         return points;
     }
 
-    private ArrayList<Point> getCollisionsForShape() {
+    private ArrayList<Point> checkForCollisionsForShapeXAxis(int direction) {
         ArrayList<Point> points = new ArrayList<>();
-        for (Point p : getCollisionPoints()) {
-            points.addAll(getCollisionsForPoint(p));
-        }
-        return points;
-    }
 
-    private ArrayList<Point> checkForCollisionsForShapeXAxis() {
-        ArrayList<Point> points = new ArrayList<>();
-        for(Point p : getCollisionPoints()) {
-            points.addAll(getCollisionsForPoint(p));
+        for(Shape shape : getStationaryShapes()) {
+            if(shape.equals(this))
+                continue;
+
+            for(Point pShape : shape.getCollisionPoints()) {
+                for(Point pCurrent : getCollisionPoints()) {
+                    if(pCurrent.x + direction == pShape.x && pCurrent.y == pShape.y) {
+                        points.add(pCurrent);
+                    }
+                }
+            }
+
         }
 
         return points;
@@ -273,10 +278,11 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, GhostSha
             }
         }
 
-        //TODO: fix collisions here
-        if(!checkForCollisionsForShapeXAxis().isEmpty()) {
+        ArrayList<Point> collisions = checkForCollisionsForShapeXAxis(amount);
+        if(!collisions.isEmpty()) {
             return false;
         }
+
 
         move(amount, 0);
         reloadGhostShape();
