@@ -1,5 +1,6 @@
 package com.antekk.tetris.view;
 
+import com.antekk.tetris.game.ConfigJSON;
 import com.antekk.tetris.game.Shapes;
 import com.antekk.tetris.game.player.TetrisPlayer;
 import com.antekk.tetris.view.themes.TetrisColors;
@@ -26,11 +27,12 @@ public class OptionsDialog extends JDialog {
         JComboBox<Theme> themeSelection = new JComboBox<>(model);
         for(Theme theme : Theme.values())
             model.addElement(theme);
+        model.setSelectedItem(ConfigJSON.getTheme());
 
-        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1,1,30,1);
+        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(ConfigJSON.getLevel(),1,30,1);
         JSpinner level = new JSpinner(spinnerModel);
         level.setPreferredSize(new Dimension(80,25));
-        level.addChangeListener(e -> TetrisPlayer.defaultGameLevel = (int) spinnerModel.getValue() - 1);
+//        level.addChangeListener(e -> TetrisPlayer.defaultGameLevel = (int) spinnerModel.getValue() - 1);
 
         JPanel setGameLevel = new JPanel();
         setGameLevel.add(new JLabel("Set starting game level: "));
@@ -49,12 +51,45 @@ public class OptionsDialog extends JDialog {
 
         generalOptions.add(theme);
 
+        JPanel blockSize = new JPanel();
+        blockSize.add(new JLabel("Block size (px): "));
+        SpinnerNumberModel blockSizeModel = new SpinnerNumberModel(ConfigJSON.getBlockSize(),5,Integer.MAX_VALUE,5);
+        JSpinner sizeSpinner = new JSpinner(blockSizeModel);
+        sizeSpinner.setPreferredSize(new Dimension(80,25));
+        blockSize.add(sizeSpinner);
+
+        generalOptions.add(blockSize);
+
+        JPanel buttons = new JPanel();
         JButton okButton = new JButton("OK");
-        okButton.addActionListener(e -> this.dispose());
+        okButton.addActionListener(e -> {
+            TetrisPlayer.defaultGameLevel = (int) spinnerModel.getValue() - 1;
+            int newBlockSize = (int) blockSizeModel.getValue();
+            if(newBlockSize != Shapes.getBlockSizePx()) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "You need to restart the game for the block size setting to work properly!",
+                        "Warning",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                Shapes.setBlockSizePx(newBlockSize);
+            }
+
+            ConfigJSON.saveValues((Integer) level.getValue(), (Theme) themeSelection.getSelectedItem(), newBlockSize);
+            this.dispose();
+            parent.repaint();
+        });
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(e -> this.dispose());
+
+        buttons.add(okButton);
+        buttons.add(Box.createRigidArea(new Dimension(Shapes.getBlockSizePx(), 1)));
+        buttons.add(cancelButton);
 
         tabbedPane.addTab("General", generalOptions);
         add(tabbedPane, BorderLayout.PAGE_START);
-        add(okButton, BorderLayout.PAGE_END);
+        add(buttons, BorderLayout.PAGE_END);
 
         pack();
     }

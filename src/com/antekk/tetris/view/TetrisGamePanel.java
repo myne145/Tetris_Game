@@ -1,5 +1,6 @@
 package com.antekk.tetris.view;
 
+import com.antekk.tetris.game.ConfigJSON;
 import com.antekk.tetris.game.Shapes;
 import com.antekk.tetris.game.loop.GameLoop;
 import com.antekk.tetris.game.loop.GameState;
@@ -23,25 +24,23 @@ import static com.antekk.tetris.game.Shapes.getGhostShape;
 import static com.antekk.tetris.game.keybinds.TetrisKeybinds.setupKeyBindings;
 
 public class TetrisGamePanel extends JPanel {
-    public static final int LEFT = 8 * getBlockSizePx();
-    public static final int TOP = getBlockSizePx();
-    public static final int RIGHT = getBoardCols() * getBlockSizePx();
-    public static final int BOTTOM = getBoardRows() * getBlockSizePx();
-    private final InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-    private final ActionMap actionMap = getActionMap();
+    public static int LEFT;
+    public static int TOP;
+    public static int RIGHT;
+    public static int BOTTOM;
 
-    private final HeldShapeDisplay heldShapeDisplay = new HeldShapeDisplay();
-    private final NextShapeDisplay nextShapeDisplay = new NextShapeDisplay();
+    private final HeldShapeDisplay heldShapeDisplay;
+    private final NextShapeDisplay nextShapeDisplay;
 
-    private final ScoreDisplay scorePanel = new ScoreDisplay();
-    private final LinesClearedDisplay linesClearedDisplay = new LinesClearedDisplay();
-    private final LevelDisplay levelDisplay = new LevelDisplay();
+    private final ScoreDisplay scorePanel;
+    private final LinesClearedDisplay linesClearedDisplay;
+    private final LevelDisplay levelDisplay;
 
     private final GameLoop loop = new GameLoop(this);
     private final BestPlayersDialog bestPlayersDialog = new BestPlayersDialog(this);
     private final ScoreRewardDisplay addedScoreText;
     private final JPanel toolbar = new JPanel();
-    private final OptionsDialog optionsDialog = new OptionsDialog(this);
+    private final OptionsDialog optionsDialog;
 
     @Override
     protected synchronized void paintComponent(Graphics g1) {
@@ -109,10 +108,23 @@ public class TetrisGamePanel extends JPanel {
 
     }
 
-    protected TetrisGamePanel() {
+    protected TetrisGamePanel(JFrame parent) {
+        ConfigJSON.setValuesFromConfig();
         Shapes.setGamePanel(this);
-        TetrisColors.setTheme(Theme.LIGHT);
+
+        LEFT = 8 * getBlockSizePx();
+        TOP = getBlockSizePx();
+        RIGHT = getBoardCols() * getBlockSizePx();
+        BOTTOM = getBoardRows() * getBlockSizePx();
+        parent.setPreferredSize(this.getPreferredSize());
+
+        scorePanel = new ScoreDisplay();
+        linesClearedDisplay = new LinesClearedDisplay();
+        levelDisplay = new LevelDisplay();
+        optionsDialog = new OptionsDialog(this);
         addedScoreText = new ScoreRewardDisplay();
+        heldShapeDisplay = new HeldShapeDisplay();
+        nextShapeDisplay = new NextShapeDisplay();
 
         setLayout(new BorderLayout());
         setDoubleBuffered(true);
@@ -122,6 +134,11 @@ public class TetrisGamePanel extends JPanel {
         JButton pauseGame = new JButton("Pause game");
         JButton showBestPlayers = new JButton("Best players");
         JButton options = new JButton("Options");
+
+        newGame.setPreferredSize(new Dimension(3 * Shapes.getBlockSizePx(), (int) (0.65 * getBlockSizePx())));
+        pauseGame.setPreferredSize(new Dimension(3 * Shapes.getBlockSizePx(), (int) (0.65 * getBlockSizePx())));
+        showBestPlayers.setPreferredSize(new Dimension(3 * Shapes.getBlockSizePx(), (int) (0.65 * getBlockSizePx())));
+        options.setPreferredSize(new Dimension(3 * Shapes.getBlockSizePx(), (int) (0.65 * getBlockSizePx())));
 
         BoxLayout layout = new BoxLayout(toolbar, BoxLayout.X_AXIS);
         toolbar.setLayout(layout);
@@ -168,6 +185,8 @@ public class TetrisGamePanel extends JPanel {
         addedScoreText.setBorder(new EmptyBorder(new Insets(0,LEFT + RIGHT + Shapes.getBlockSizePx(), 0, 0)));
         showBestPlayers.addActionListener(e -> showBestPlayersDialog(!bestPlayersDialog.isVisible()));
 
+        InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = getActionMap();
         setupKeyBindings(inputMap, actionMap, this);
 
         Shapes.startNewGame();
@@ -178,7 +197,7 @@ public class TetrisGamePanel extends JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(RIGHT + LEFT + 8 * getBlockSizePx(), BOTTOM + TOP);
+        return new Dimension(RIGHT + LEFT + 8 * getBlockSizePx() + Shapes.getBlockSizePx() / 2, (int) (BOTTOM + TOP + 2.5 * getBlockSizePx()));
     }
 
     @Override

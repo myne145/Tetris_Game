@@ -27,4 +27,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+
 /best_players.json
+/tetris_config.json

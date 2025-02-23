@@ -22,6 +22,7 @@ public class Shapes {
     private static int currentLinesForNextLevel = 0;
     private static TetrisGamePanel gamePanel;
     private static TetrisPlayer currentPlayer;
+    private static int blockSizePx;
 
     private static final ArrayList<Double> speedValues = new ArrayList<>(
            Arrays.asList(0.01667, 0.021017, 0.026977, 0.035256, 0.04693, 0.06361, 0.0879, 0.1236,
@@ -232,7 +233,7 @@ public class Shapes {
     }
 
     public static int getBlockSizePx() {
-        return 40;
+        return blockSizePx;
     }
 
     public static float getFramesForBlockToMoveDown() {
@@ -253,5 +254,9 @@ public class Shapes {
 
     public static void setGamePanel(TetrisGamePanel gamePanel) {
         Shapes.gamePanel = gamePanel;
+    }
+
+    public static void setBlockSizePx(int blockSizePx) {
+        Shapes.blockSizePx = blockSizePx;
     }
 }
