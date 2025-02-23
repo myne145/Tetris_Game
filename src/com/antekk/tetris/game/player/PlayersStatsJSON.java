@@ -1,5 +1,6 @@
 package com.antekk.tetris.game.player;
 
+import com.antekk.tetris.view.ErrorDialog;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +48,8 @@ public class PlayersStatsJSON {
             loadedLevel = playerAtIndex.getInt("level");
             loadedName = playerAtIndex.getString("name");
         } catch (Exception e) {
-            throw new RuntimeException("missing JSON key"); //TODO
+            new ErrorDialog("Missing JSON key in players statistics file!", e);
+            return null;
         }
 
         TetrisPlayer player = new TetrisPlayer(
@@ -80,7 +82,7 @@ public class PlayersStatsJSON {
         try(FileWriter writer = new FileWriter(playersFile)) {
             writer.write(players.toString(4));
         } catch (IOException e) {
-            throw new RuntimeException("add a description here lol"); //TODO
+            new ErrorDialog("Cannot write to player statistics file!", e);
         }
     }
 
@@ -97,7 +99,7 @@ public class PlayersStatsJSON {
         try {
             initialize();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            new ErrorDialog("Cannot initialize players statistics file!", e);
         }
     }
 

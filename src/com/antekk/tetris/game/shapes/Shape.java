@@ -2,6 +2,7 @@ package com.antekk.tetris.game.shapes;
 
 import com.antekk.tetris.game.Shapes;
 import com.antekk.tetris.game.player.ScoreValue;
+import com.antekk.tetris.view.ErrorDialog;
 import com.antekk.tetris.view.TetrisGamePanel;
 import com.antekk.tetris.view.themes.TetrisColors;
 
@@ -346,7 +347,8 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, GhostSha
         try {
             shape = (Shape) super.clone();
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
+            new ErrorDialog("Cannot clone the Shape class!", e);
+            return null;
         }
 
         shape.shapeColor = getDefaultColor();

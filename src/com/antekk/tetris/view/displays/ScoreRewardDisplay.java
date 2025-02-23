@@ -1,6 +1,7 @@
 package com.antekk.tetris.view.displays;
 
 import com.antekk.tetris.game.Shapes;
+import com.antekk.tetris.view.ErrorDialog;
 import com.antekk.tetris.view.themes.TetrisColors;
 import com.antekk.tetris.view.TetrisGamePanel;
 
@@ -51,7 +52,7 @@ public class ScoreRewardDisplay extends JPanel implements Runnable{
             Thread.sleep(700);
         } catch (InterruptedException e) {
             isDisplaying = false;
-            throw new RuntimeException(e);
+            new ErrorDialog("Score display animation thread interrupted!", e);
         }
         while(alpha >= 0) {
             topText.setForeground(new Color(TetrisColors.foregroundColor.getRed(),
@@ -70,7 +71,7 @@ public class ScoreRewardDisplay extends JPanel implements Runnable{
                 Thread.sleep(50);
             } catch (InterruptedException e) {
                 isDisplaying = false;
-                throw new RuntimeException(e);
+                new ErrorDialog("Score display animation thread interrupted!", e);
             }
 
         }

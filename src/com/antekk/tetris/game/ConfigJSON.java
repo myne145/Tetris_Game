@@ -1,6 +1,7 @@
 package com.antekk.tetris.game;
 
 import com.antekk.tetris.game.player.TetrisPlayer;
+import com.antekk.tetris.view.ErrorDialog;
 import com.antekk.tetris.view.themes.TetrisColors;
 import com.antekk.tetris.view.themes.Theme;
 import org.json.JSONException;
@@ -21,7 +22,7 @@ public final class ConfigJSON {
             try {
                 initialize();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                new ErrorDialog("Cannot initialize the config file", e);
             }
         }
 
@@ -31,7 +32,7 @@ public final class ConfigJSON {
         try {
             theme = Theme.valueOf(object.getString("theme"));
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
+            new ErrorDialog("Invalid theme value in config!", e);
         }
 
         TetrisColors.setTheme(theme);
@@ -70,7 +71,7 @@ public final class ConfigJSON {
         try(FileWriter writer = new FileWriter(file)) {
             writer.write(object.toString(4));
         } catch (IOException e) {
-            throw new RuntimeException("add a description here lol"); //TODO
+            new ErrorDialog("Cannot write new values to config!", e);
         }
     }
 

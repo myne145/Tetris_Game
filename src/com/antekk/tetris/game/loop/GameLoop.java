@@ -2,6 +2,7 @@ package com.antekk.tetris.game.loop;
 
 import com.antekk.tetris.game.Shapes;
 import com.antekk.tetris.game.player.TetrisPlayer;
+import com.antekk.tetris.view.ErrorDialog;
 import com.antekk.tetris.view.TetrisGamePanel;
 
 import javax.swing.*;
@@ -110,7 +111,7 @@ public class GameLoop extends Thread {
         try {
             gameLoop();
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            new ErrorDialog("Game thread interrupted!", e);
         }
     }
 
