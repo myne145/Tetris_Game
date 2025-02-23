@@ -90,25 +90,34 @@ public class Shapes {
     }
 
     public static void clearFullLines() {
-        int start = 0;
-        int end = Integer.MAX_VALUE;
+        int start = -1;
+        int end = -1;
+        boolean wereLinesCleared = false;
         for(int currentYpos = 0; currentYpos < TetrisGamePanel.getBoardRows(); currentYpos++) {
             boolean isLineFull = isLineFull(currentYpos);
-            if(isLineFull && currentYpos > start) {
+
+            if(isLineFull && start == -1) {
                 start = currentYpos;
-            }
-            if(isLineFull && currentYpos < end) {
                 end = currentYpos;
+            }
+
+            if(isLineFull)
+                end = currentYpos;
+
+            if((!isLineFull  || currentYpos == TetrisGamePanel.getBoardRows() - 1) && start != -1) {
+                clearLineAt(start, end);
+                wereLinesCleared = true;
+                start = -1;
+                end = -1;
             }
         }
 
-        if(end == Integer.MAX_VALUE) {
+        if(!wereLinesCleared) {
             comboCounter = -1;
             return;
         }
 
         comboCounter++;
-        clearLineAt(start, end);
         getCurrentPlayer().addScore(ScoreValue.COMBO.getValue() * comboCounter * getCurrentPlayer().level);
     }
 

@@ -27,6 +27,8 @@ public class TetrisGamePanel extends JPanel {
     public static final int TOP = getBlockSizePx();
     public static final int RIGHT = getBoardCols() * getBlockSizePx();
     public static final int BOTTOM = getBoardRows() * getBlockSizePx();
+    private final InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    private final ActionMap actionMap = getActionMap();
 
     private final HeldShapeDisplay heldShapeDisplay = new HeldShapeDisplay();
     private final NextShapeDisplay nextShapeDisplay = new NextShapeDisplay();
@@ -166,8 +168,6 @@ public class TetrisGamePanel extends JPanel {
         addedScoreText.setBorder(new EmptyBorder(new Insets(0,LEFT + RIGHT + Shapes.getBlockSizePx(), 0, 0)));
         showBestPlayers.addActionListener(e -> showBestPlayersDialog(!bestPlayersDialog.isVisible()));
 
-        InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        ActionMap actionMap = getActionMap();
         setupKeyBindings(inputMap, actionMap, this);
 
         Shapes.startNewGame();

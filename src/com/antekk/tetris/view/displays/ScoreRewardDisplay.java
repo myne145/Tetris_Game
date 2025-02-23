@@ -12,6 +12,7 @@ public class ScoreRewardDisplay extends JPanel implements Runnable{
     private int alpha = 255;
     private final JLabel topText = new JLabel();
     private final JLabel bottomText = new JLabel();
+    private boolean isDisplaying = false;
 
     public ScoreRewardDisplay() {
         super();
@@ -29,6 +30,9 @@ public class ScoreRewardDisplay extends JPanel implements Runnable{
 
 
     public void setText(String top, String bottom) {
+        if(isDisplaying)
+            return;
+
         topText.setText(top);
         bottomText.setText(bottom);
 
@@ -39,12 +43,14 @@ public class ScoreRewardDisplay extends JPanel implements Runnable{
 
     @Override
     public void run() {
+        isDisplaying = true;
         topText.setForeground(TetrisColors.foregroundColor);
         bottomText.setForeground(TetrisColors.foregroundColor);
         this.setVisible(true);
         try {
             Thread.sleep(700);
         } catch (InterruptedException e) {
+            isDisplaying = false;
             throw new RuntimeException(e);
         }
         while(alpha >= 0) {
@@ -63,12 +69,12 @@ public class ScoreRewardDisplay extends JPanel implements Runnable{
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
+                isDisplaying = false;
                 throw new RuntimeException(e);
             }
 
         }
+        isDisplaying = false;
         this.setVisible(false);
     }
-
-
 }
