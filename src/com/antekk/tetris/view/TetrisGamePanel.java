@@ -37,7 +37,7 @@ public class TetrisGamePanel extends JPanel {
     private final LevelDisplay levelDisplay;
 
     private final GameLoop loop = new GameLoop(this);
-    private final BestPlayersDialog bestPlayersDialog = new BestPlayersDialog(this);
+    private final BestPlayersDialog bestPlayersDialog;
     private final ScoreRewardDisplay addedScoreText;
     private final JPanel toolbar = new JPanel();
     private final OptionsDialog optionsDialog;
@@ -125,6 +125,7 @@ public class TetrisGamePanel extends JPanel {
         addedScoreText = new ScoreRewardDisplay();
         heldShapeDisplay = new HeldShapeDisplay();
         nextShapeDisplay = new NextShapeDisplay();
+        bestPlayersDialog = new BestPlayersDialog(this);
 
         setLayout(new BorderLayout());
         setDoubleBuffered(true);
