@@ -33,6 +33,7 @@ public final class ConfigJSON {
             theme = Theme.valueOf(object.getString("theme"));
         } catch (IllegalArgumentException e) {
             new ErrorDialog("Invalid theme value in config!", e);
+            return;
         }
 
         TetrisColors.setTheme(theme);
