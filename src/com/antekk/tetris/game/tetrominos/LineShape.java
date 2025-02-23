@@ -47,13 +47,13 @@ public class LineShape extends Shape {
     @Override
     public void setAsHeldShape() {
         super.setAsHeldShape();
-        move(-getBlockSizePx(), 2 * getBlockSizePx());
+        move(-getBlockSizePx(), (int) (2.5 * getBlockSizePx()));
     }
 
     @Override
     public void setAsNextShape() {
         super.setAsNextShape();
-        move(17 * getBlockSizePx(), 2 * getBlockSizePx());
+        move(17 * getBlockSizePx(), (int) (2.5 * getBlockSizePx()));
     }
 
     @Override

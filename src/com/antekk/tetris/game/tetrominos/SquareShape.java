@@ -36,13 +36,13 @@ public class SquareShape extends Shape {
     @Override
     public void setAsHeldShape() {
         super.setAsHeldShape();
-        move(-getBlockSizePx(), getBlockSizePx() * 2);
+        move(-getBlockSizePx(), getBlockSizePx() * 3);
     }
 
     @Override
     public void setAsNextShape() {
         super.setAsNextShape();
-        move(17 * getBlockSizePx(), 2 * getBlockSizePx());
+        move(17 * getBlockSizePx(), 3 * getBlockSizePx());
     }
 
     @Override

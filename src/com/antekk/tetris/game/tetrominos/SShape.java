@@ -36,12 +36,12 @@ public class SShape extends Shape {
     @Override
     public void setAsHeldShape() {
         super.setAsHeldShape();
-        move(-getBlockSizePx() / 2, getBlockSizePx() * 2);
+        move(-getBlockSizePx() / 2, getBlockSizePx() * 3);
     }
 
     @Override
     public void setAsNextShape() {
         super.setAsNextShape();
-        move((int) (17.5 * getBlockSizePx()), 2 * getBlockSizePx());
+        move((int) (17.5 * getBlockSizePx()), 3 * getBlockSizePx());
     }
 }
