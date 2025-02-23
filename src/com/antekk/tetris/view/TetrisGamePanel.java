@@ -3,6 +3,7 @@ package com.antekk.tetris.view;
 import com.antekk.tetris.game.Shapes;
 import com.antekk.tetris.game.loop.GameLoop;
 import com.antekk.tetris.game.loop.GameState;
+import com.antekk.tetris.game.player.TetrisPlayer;
 import com.antekk.tetris.view.displays.ScoreRewardDisplay;
 import com.antekk.tetris.view.displays.score.LevelDisplay;
 import com.antekk.tetris.view.displays.score.LinesClearedDisplay;
@@ -143,7 +144,7 @@ public class TetrisGamePanel extends JPanel {
 
         newGame.addActionListener(e -> {
             int option = JOptionPane.showConfirmDialog(null,
-                    "Do you really want to start a new game?",
+                    "Do you really want to start a new game at level " + (TetrisPlayer.defaultGameLevel + 1) + "?",
                     "Are you sure?",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE

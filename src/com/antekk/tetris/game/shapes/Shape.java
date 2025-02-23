@@ -164,8 +164,6 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, GhostSha
             }
         }
 
-        //TODO: max one vertical wall kick when shape lands
-
         move(maxDistanceX, maxDistanceY);
         return true;
     }
@@ -198,10 +196,6 @@ public abstract class Shape implements Cloneable, HeldShape, NextShape, GhostSha
 
         if(!futureShape.handleWallKicks())
             return false;
-
-
-//        if(!futureShape.checkForCollisionsForShapeXAxis().isEmpty())
-//            return false;
 
         this.collisionPoints = futureShape.collisionPoints;
 

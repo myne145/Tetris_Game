@@ -9,6 +9,7 @@ public class TetrisPlayer {
     public long linesCleared = 0;
     public int level = 0;
     public String name;
+    public static int defaultGameLevel = 0;
 
     public void addScore(ScoreValue scoreValue) {
         int val = scoreValue.getValue();
@@ -33,6 +34,7 @@ public class TetrisPlayer {
      */
     public TetrisPlayer(ScoreRewardDisplay scoreDisplay) {
         this.scoreDisplay = scoreDisplay;
+        this.level = defaultGameLevel;
     }
 
     public TetrisPlayer(long score, long linesCleared, int level, String name) {

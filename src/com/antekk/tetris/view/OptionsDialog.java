@@ -1,6 +1,7 @@
 package com.antekk.tetris.view;
 
 import com.antekk.tetris.game.Shapes;
+import com.antekk.tetris.game.player.TetrisPlayer;
 import com.antekk.tetris.view.themes.TetrisColors;
 import com.antekk.tetris.view.themes.Theme;
 
@@ -26,6 +27,16 @@ public class OptionsDialog extends JDialog {
         for(Theme theme : Theme.values())
             model.addElement(theme);
 
+        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1,1,30,1);
+        JSpinner level = new JSpinner(spinnerModel);
+        level.setPreferredSize(new Dimension(80,25));
+        level.addChangeListener(e -> TetrisPlayer.defaultGameLevel = (int) spinnerModel.getValue() - 1);
+
+        JPanel setGameLevel = new JPanel();
+        setGameLevel.add(new JLabel("Set starting game level: "));
+        setGameLevel.add(level);
+
+        generalOptions.add(setGameLevel);
 
         JPanel theme = new JPanel();
         theme.add(new JLabel("Theme: "));
